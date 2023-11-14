@@ -20,5 +20,7 @@ vamos instalar o EXPRESS onde é uma bilbioteca do npm pois ela vamos utilizar p
 Então será instalado o express como nossa dependencia do projeto e com express vem a pasta node_modules então precisamos criar um arquivo chamado .gitignore e nele precisamos incluir está pasta pois não queremos que está pastasuba para o nosso repositorio git
 
 
+Agora vamos criar um arquivo chamado server.js
+
 
 
