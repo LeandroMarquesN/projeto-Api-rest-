@@ -22,5 +22,21 @@ Então será instalado o express como nossa dependencia do projeto e com express
 
 Agora vamos criar um arquivo chamado server.js
 
+neste arquivo vamos criar um aconstante http e importar o monulo http
+
+deposi criamos a portaque nosso servidor vai rodar  usamos a variavel de ambient com o codigo process.env.PORT ou se não ter nenhuma porta disponivel rodaremos  na porta 3000
+
+depois criaremos outro arquivo app.js onde vamos importar o express para fazer as requisiçoes depois criaremos uma variavel app  e atribuimos uma extancia do express
+e no arquivo  app  vamos exportar a variavel app pois nela esta o codigo da requisição http  onde estamos enviand o status 200 para mostrar que está tudo ok !!
+
+ 
+Agora voltamos para o arquivo server.js  e criamos o nosso sservidor para isso criamos um avariavl chamada server atribuimos  o http.createserver(app) e como paramaetro para a função createserver passamos a nossa variavel app
+
+depois colocamos o servidor para escutar a porta entaõ passamos a variavel port como parametro paraa função listen()
+
+por isso do codigo server.listen(port) 
+
+
+
 
 
