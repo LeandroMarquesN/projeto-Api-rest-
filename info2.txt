@@ -37,7 +37,9 @@ depois colocamos o servidor para escutar a porta entaõ passamos a variavel port
 por isso do codigo server.listen(port) 
 
 
-e como estou usando uma extenção do git ele  me ajuda a controlar quantos arquivos devo comitar para subir no meu repositorio.
+E como estou usando uma extenção do git ele  me ajuda a controlar quantos arquivos devo comitar para subir no meu repositorio.
+
+O legal dessa extenção é que eu nao preciso dar um comando no terminal, apenas tenho que fazer uma sincronização pela primaira vez com o git e para fazer essa sincronização temos que fazer os commit e o push e colocar o nosso tolken de acesso que eé pedido como senha . depois ele ja entende a sincronia  e bas confirmar o commint com  o push que ele ja sobe no repoistorio.
 
 
 
