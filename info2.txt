@@ -37,6 +37,8 @@ depois colocamos o servidor para escutar a porta entaõ passamos a variavel port
 por isso do codigo server.listen(port) 
 
 
+e como estou usando uma extenção do git ele  me ajuda a controlar quantos arquivos devo comitar para subir no meu repositorio.
+
 
 
 
