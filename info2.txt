@@ -1,0 +1,24 @@
+
+ref:
+https://www.youtube.com/watch?v=hAAj27hgPFg&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=2&ab_channel=Maransatto
+
+
+Neste documento estarei abordando explicaçoes do passo a passo pra a criação da API REst.
+
+
+    Antes de tudo precisamos ter instalado na maquina o node , npm , vscode, docker, mysql,  e naturalmente o servidor do mysql , aqui na minha maquina estou usando o apache  e o git pois estaremos transformando está pasta em um repositorio do github.
+
+
+agora vamos iniciaar oprojeto criando o arquivo package.json onde estará as dependecias do projeto.
+
+    comando: npm init  ou npm init -y para noa fazer as perguntas.
+
+vamos instalar o EXPRESS onde é uma bilbioteca do npm pois ela vamos utilizar para fazeras requisições HTTP do node.
+
+    comando :  npm install --save express
+
+Então será instalado o express como nossa dependencia do projeto e com express vem a pasta node_modules então precisamos criar um arquivo chamado .gitignore e nele precisamos incluir está pasta pois não queremos que está pastasuba para o nosso repositorio git
+
+
+
+
