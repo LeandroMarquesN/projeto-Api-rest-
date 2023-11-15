@@ -47,6 +47,120 @@ Dando continuidade vamos entender como criar as rotas :
 
 ref: https://www.youtube.com/watch?v=TGbiY6015Wg&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=3&ab_channel=Maransatto
 
+para criarmos as rotas de pedidos será a mesma logica criada para a rota de produtos.
+
+fazermos uma requerimento do express 
+estanciamos ele em um avariavel chamada express.
+
+depois criamos outra variavel chamada de router onde será atribuido  o express junto com sua sunção Router()
+
+
+E com o  router iremos fazer aas nossas requisições http.
+um acoisa que e importante entender é que o nome dos arquivos importa nesses caso como estamos trabalhando com rotas estamos especicando a rotas de pedidos e produtos e a url que vai no navegador será o nome do arquivo especifico .
+
+Com neste caso estou trabalhando no localhost então a url qu eestamos trabalhando é:
+
+    http://localhost:3000/produtos   
+
+isso no caso de produtos.
+
+agora em pedidos o final da url ja muda.
+
+    http://localhost:3000/pedidos
+    
+Perceba que pedidos e produtos sao respectivamente o nome dos nossos arquivos
+enta'para definirmo scorretamente a a rota devemos trablahar com http junto com o router do express para que ele indetifique por si só a rota.
+
+acredito queficou um poruco confuso a explicação mas com essa explicaçõa e observando o codigo vai ser faci entender do que se trata.
+
+Agora voltando para Router o router basicamente é um modulo do express que trata as rotas e com ele conseguimos fazer as requisições http e assim sendo possivel trabalahar com os verbos get post patch delete.
+
+
+Agora um explicação para conseguirmos entender os parametros posto na url e como conseguirmos trabalahr com eles.
+
+preste atenção neste codigo.
+
+router.get('/:id_pedido', (req, resp, next) => {
+    const id = req.params.id_pedido;
+
+    if (id === "show") {
+        resp.status(200).send({
+            menssagem: `Você descobriu o id show que é  o => ${id}`
+        });
+    } else {
+        resp.status(200).send({
+            mennsagem: `Voce nao colocou o id especial!vc colcocou ${id}`
+        });
+    }
+});
+
+
+neste codigo queremos trabalhar com um produto especifico no caso do exemplo é um id_pedido para pegarmos esse parametro na url devemos pegar da funçao midwer na requisição os parametros dessa requisição por isso do params e depois pegamos o id_pedido e atribuimos em uma variavel e com esse parametro consigo fazer quanquer logica neste caso estou trablahando com uma estrutura condicional onde caso  parametro da url que seja colocado pelo usuario seja show vai acontecer algo
+
+
+======================================================================================================================================================================
+
+Agora vamos faslar de algumas ferramentas de desenvolvimeto que iremos utilizatr neste projeto para facilictar o trabalho umadelas será o:
+
+    NODEMON 
+
+    O nodemon permite que nos possamos trnbalhar o nosso projeto fazerndo as atulaizações necessarias sem precisar ficar dando um restart no servidor manulamente . Com o ndemon  ele vai perceber essa alteração e vai far esse restart no nosso servido automaticamente.
+    
+    
+    vamos dar o comando :
+    
+        npm install --save-dev nodemon
+    
+    com esse comando vamo instalar as dependencias do nosso projeto.
+    
+    para instalarmos o nodemon globalmete em nossa maquina devemos adcionar a flag -g 
+    então o codigo fica assim:
+    
+        npm install -g nodemon
+    
+    podemos intalar o morgan
+    
+    Basicamente o morgan traz para nos o tipo de requisição que foi feita na url e ele mostra no terminal se foi um get, put, patch, post, delete na rota de pedidos ou produtos que no cacso so temos essas 2 rotas.
+    
+    npm install --save-dev morgan
+    
+    E temos que intancialo no arquivo onde vai as nossas rotas que no caso é app.js
+    
+    o codigo ficara assim:
+    
+        const morgan = require('morgan');
+        
+        e entre a rotas e as requisições colocamos  a requisição do morgan onde ele vai monitorar as rotas.
+        
+        O codigo será :
+        
+            app.use(morgan('dev'));
+            
+            logo em seguida as requisições das rotas pedidos e produtos, ou seja ele tem que fica assima das rotas.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

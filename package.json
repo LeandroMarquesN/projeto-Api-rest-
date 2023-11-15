@@ -2,8 +2,9 @@
   "name": "projeto-rest-api-node-docker-mysql",
   "version": "1.0.0",
   "description": "Teste de Rest Api",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -14,6 +15,10 @@
   "author": "Leandro Marques",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }

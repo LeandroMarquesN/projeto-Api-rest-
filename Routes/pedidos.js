@@ -12,7 +12,7 @@ router.get('/', (req, resp, next) => {
 
 router.post('/', (req, resp, next) => {
     resp.status(200).send({
-        menssagem: "inseri um novo  pedido"
+        menssagem: "insere um novo  pedido"
     });
 });
 
@@ -26,7 +26,7 @@ router.get('/:id_pedido', (req, resp, next) => {
         });
     } else {
         resp.status(200).send({
-            mennsagem: `Voce nao colcou o id especial!vc colcocou ${id}`
+            mennsagem: `Voce nao colocou o id especial!vc colcocou ${id}`
         });
     }
 });
