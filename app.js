@@ -10,8 +10,9 @@ const rotasPedidos = require('./Routes/pedidos')
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(morgan('dev'));
 app.use(bodyParser.json)
+
+app.use(morgan('dev'));
 // ===  ROTAS DE PRODUTOS =======
 app.use('/produtos', rotasProdutos);
 // === ROTAS DE PEDIDOS ======
