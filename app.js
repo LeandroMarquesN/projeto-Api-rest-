@@ -4,6 +4,10 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser')
 
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json)
+
+
 // ========= ROTAS =============
 const rotasProdutos = require('./Routes/produtos')
 const rotasPedidos = require('./Routes/pedidos')
@@ -11,8 +15,6 @@ const rotasPedidos = require('./Routes/pedidos')
 
 app.use(morgan('dev'));
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json)
 
 // ========= TRATANDO ERROS CORS ========
 
