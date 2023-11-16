@@ -8,7 +8,7 @@ router.get('/', (req, resp, next) => {
     });
 });
 
-// ================ INSERI UM PEDIDO =============
+// ============ INSERE UM PEDIDO =============
 
 router.post('/', (req, resp, next) => {
 
@@ -18,7 +18,7 @@ router.post('/', (req, resp, next) => {
     }
 
     resp.status(200).send({
-        menssagem: "insere um novo  pedido",
+        menssagem: "Pedido inserido!!",
         PedidoCriado: pedido
     });
 });

@@ -9,10 +9,17 @@ const rotasProdutos = require('./Routes/produtos')
 const rotasPedidos = require('./Routes/pedidos')
 
 
+app.use(morgan('dev'));
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json)
 
-app.use(morgan('dev'));
+// ========= TRATANDO ERROS CORS ========
+
+
+
+
+
 // ===  ROTAS DE PRODUTOS =======
 app.use('/produtos', rotasProdutos);
 // === ROTAS DE PEDIDOS ======
