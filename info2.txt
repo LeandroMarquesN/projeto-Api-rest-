@@ -156,7 +156,7 @@ e vamos ao nosso arquivo app.ja vamos importar o modulo do bodyParser
 
     e depois vamos colocar o codigo acima para tratar a requisição para apenas aceitar dados simples
     
-depois vamo incluir :
+depois vamo incluir : !!!! ATENÇÃO REMOVI ESSA LINHA DE CODIGO ONDE CNVERTE O CORPO DA REWUISIÇÃO EM JSON !!!!! POIS NÃO ESTAVA FUNCIONANDO ISSO POR QUE O METHODOSEND JA CONVERTE PARA JSON ENTÃO ESSA LINHA E DESNECESSARIA POREM ESTOU DEIXANDO ELA AQUI PARA SE ENTENDER DE COMO E A CONVERJÃO PARA JSON USANDO O BODUPARSER.
 
     app.use(bodyParser.json();
     
@@ -182,6 +182,40 @@ router.post('/', (req, resp, next) => {
 na parte destacadas estamos trabalhando o corpo da requisiçõa onde vamos extrair estas informações.
 
 para pegar os dados do corpo da requisição precisamos de uma interface de frontend preparada para isso e como não temos vamos trabalhar com o postman para enviar esses dados na requisição do corpo.
+
+E para fzer os teste de requisição no postman basta colocar a url desejada onde no nosso caso estamos usando a url :
+
+    http://localhost:3002/produtos
+    
+    E dentro do postman selecionamos o Body e x-www-form-urlencoded para criarmos os atributo do corpo qu eno caso é nome e preco.
+    
+Criei tambem um segundo arquivo chamado de BD.js onde estou armazenando algumas funçẽos e metodos onde uma dela no momento e cadastrarProdutos onde tenho tambem um methodo que acrecenta um id na sequencia onde ele e pegado dos parametros da requisição.
+
+Então nomeu arquivo produtos.js 
+
+eu acrecentei uma require para importar o BD.js
+
+    const bancoDados = require("./BD")
+    
+veja o codigo deste arquivo para entender melhor o que está sendo feito
+
+depois acrecentei no methodo post onde vou inserir um produto este codigo:
+
+    router.post('/', (req, resp, next) => {
+
+    const produto = bancoDados.cadastrarProduto(
+        {
+            id: req.params.id,
+            nome: req.body.nome,
+            preco: req.body.preco
+        }
+    );
+    resp.status(201).send({
+        menssagen: "metodo post dentro da rota de produtos",
+        menss: "pedido Criado com sucesso",
+        produtoCriado: produto
+    })
+});
     
     
     

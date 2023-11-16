@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json)
+// app.use(bodyParser.json) //comentada pois se esta linnha estiver descomentada o codigo não vai funcionar
 
 
 // ========= ROTAS =============

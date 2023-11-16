@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const bancoDados = require("./BD")
 
 //======= RETORNA TODOS OS PRODUTOS =================================
 router.get('/', (req, resp, next) => {
@@ -11,10 +11,14 @@ router.get('/', (req, resp, next) => {
 });
 // ====== INSERI UM PRODUTO  ========================================
 router.post('/', (req, resp, next) => {
-    const produto = {
-        nome: req.body.name,
-        preco: req.body.preco
-    };
+
+    const produto = bancoDados.cadastrarProduto(
+        {
+            id: req.params.id,
+            nome: req.body.nome,
+            preco: req.body.preco
+        }
+    );
     resp.status(201).send({
         menssagen: "metodo post dentro da rota de produtos",
         menss: "pedido Criado com sucesso",
