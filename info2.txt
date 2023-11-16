@@ -216,9 +216,23 @@ depois acrecentei no methodo post onde vou inserir um produto este codigo:
         produtoCriado: produto
     })
 });
+
+
+
+============================================================================
+Agora vamos tratar do CORS 
+
+Ele siguinifica Cros origin resource Sharing
+
+E um afuncionalidade do html onde permite que o site acesse um outro site dependendo de algmas restrições, restrições de cabeçalho por exemplo
     
     
-    
+para maior compreenção acesse a documentação: 
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors 
+
+Cross-Origin Resource Sharing ( CORS ) é um padrão que permite que um servidor relaxe a política de mesma origem . Isso é usado para permitir explicitamente algumas solicitações de origem cruzada enquanto rejeita outras. Por exemplo, se um site oferece um serviço incorporável, pode ser necessário flexibilizar certas restrições. Definir essa configuração de CORS não é necessariamente fácil e pode apresentar alguns desafios. Nestas páginas, veremos algumas mensagens de erro comuns do CORS e como resolvê-las.
+
+Se a configuração do CORS não estiver configurada corretamente, o console do navegador apresentará um erro como "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at $somesite"indicar que a solicitação foi bloqueada por violação das regras de segurança do CORS. No entanto, isso pode não ser necessariamente um erro de configuração. É possível que a solicitação esteja de fato sendo intencionalmente proibida pelo aplicativo Web do usuário e pelo serviço externo remoto. No entanto, se o endpoint estiver disponível, será necessária alguma depuração para ter sucesso.
     
     
     

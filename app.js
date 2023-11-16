@@ -5,7 +5,25 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(bodyParser.json) //comentada pois se esta linnha estiver descomentada o codigo não vai funcionar
+// app.use(bodyParser.json) //comentada pois se esta linnha estiver descomentada o codigo não vai funcionarIO
+
+// ========= TRATANDO O CORS CONFIGURAÇÃO DE CABECALHOS==============
+
+// A strimg quer dizer permissao de origin do controle de acesso e o asterisco seguinifica para todos no lugar do asterisco poderia ser um servidor especifico ex http://servidorescpecificoestc...
+
+app.use((req, resp, next) => {
+    resp.header('Acess-Control-Allow-Origin', '*')
+    resp.header(
+        'Acess-Control-Alolow-Header',
+        'Origin, X-Requested-Width,  Content-type, Accept, Authorization'
+    );
+    if (req.method === 'OPTIONS') {
+        req.header('Acess-Control-Allow-Methods', 'PUT,POST,PATCH,DELETE,GET')
+        return resp.status(200).send({});
+
+    }
+    next();
+})
 
 
 // ========= ROTAS =============
