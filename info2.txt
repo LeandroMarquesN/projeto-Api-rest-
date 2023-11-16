@@ -124,7 +124,7 @@ Agora vamos faslar de algumas ferramentas de desenvolvimeto que iremos utilizatr
     
     npm install --save-dev morgan
     
-    E temos que intancialo no arquivo onde vai as nossas rotas que no caso é app.js
+    E temos que estancialo no arquivo onde vai as nossas rotas que no caso é app.js
     
     o codigo ficara assim:
     
@@ -137,8 +137,51 @@ Agora vamos faslar de algumas ferramentas de desenvolvimeto que iremos utilizatr
             app.use(morgan('dev'));
             
             logo em seguida as requisições das rotas pedidos e produtos, ou seja ele tem que fica assima das rotas.
+
+======================================================================================================================================================================
+agora vamos aprender como tratar o corpo da requisição e para isso vamos instalar o 
+
+Body-parcer
+
+    comando: para instalar:
     
+        npm instal --save body-paarser
+
+e vamos ao nosso arquivo app.ja vamos importar o modulo do bodyParser
+
+    const bodyParser = require('bodyParser')
+
     
+    app.use(bodyParser.urlencoded({ extended: false }))
+
+    e depois vamos colocar o codigo acima para tratar a requisição para apenas aceitar dados simples
+    
+depois vamo incluir :
+
+    app.use(bodyParser.json();
+    
+isso siguinifica que vamos aceitar apenas dados no formato json.
+
+agora no arquivo de rotas tanto do produto quanto no de pedidos vamos trabalhar em cima das requisições do body ou seja do req.body.
+
+o codigo do arquivo produto.js que esta na pasta rotas
+
+    // ====== INSERI UM PRODUTO  ========================================
+router.post('/', (req, resp, next) => {
+    const produto = {
+        nome: req.body.nome,
+        preco: req.body.preco
+    }
+
+    resp.status(200).send({
+        menssagen: "metodo post dentro da rota de produtos",
+        produtoCriado: produto
+    })
+});
+
+na parte destacadas estamos trabalhando o corpo da requisiçõa onde vamos extrair estas informações.
+
+para pegar os dados do corpo da requisição precisamos de uma interface de frontend preparada para isso e como não temos vamos trabalhar com o postman para enviar esses dados na requisição do corpo.
     
     
     

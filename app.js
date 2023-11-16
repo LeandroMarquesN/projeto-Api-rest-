@@ -1,11 +1,17 @@
+// ======IMPORTANDO MODULOS ===
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const bodyParser = require('body-parser')
+
+// ========= ROTAS =============
 const rotasProdutos = require('./Routes/produtos')
 const rotasPedidos = require('./Routes/pedidos')
 
 
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('dev'));
+app.use(bodyParser.json)
 // ===  ROTAS DE PRODUTOS =======
 app.use('/produtos', rotasProdutos);
 // === ROTAS DE PEDIDOS ======
