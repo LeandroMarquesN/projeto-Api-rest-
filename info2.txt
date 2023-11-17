@@ -235,7 +235,42 @@ Cross-Origin Resource Sharing ( CORS ) é um padrão que permite que um servidor
 Se a configuração do CORS não estiver configurada corretamente, o console do navegador apresentará um erro como "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at $somesite"indicar que a solicitação foi bloqueada por violação das regras de segurança do CORS. No entanto, isso pode não ser necessariamente um erro de configuração. É possível que a solicitação esteja de fato sendo intencionalmente proibida pelo aplicativo Web do usuário e pelo serviço externo remoto. No entanto, se o endpoint estiver disponível, será necessária alguma depuração para ter sucesso.
     
     
+    preciso continuar esta descrição do codigo...
     
+==================================================================================
+
+Agora vamos partir para o docker onde vamos incluir uma estancia do mysql do  docker
+ estamos utilizando o dokcer para armazenar o nosso banco de dados em um container dokcer e fazer as interligação com NodeJs
+ 
+ recomendo que veja na pasta que criei sobre dockercaso queira saber mais sobre o docker:
+ 
+ o comando que vamos utilizar no docker para gerar o container do mysql e executar será:
+ 
+    sudo docker run --rm -p 3307:3307 --name mysql_projeto_full -e MYSQL_ROOT_PASSWORD=root -d mysql
+
+    Estamos usando a flag -rm  para toda vex que darmos um stop no container ele seja automaticamente excluido dessa maneira não acumulamos container sem utilidadades.
+    
+Precisamos usar o sudo na frente do comando para permitir a execução do codigo caso estejamos logado no linux como usuario comun
+    
+com esse comando o nosso container será criado então para visulaizarmos temos que dar o coando;
+
+    docker ps
+e vamos ver que o container do mysql está rodando perfeitamente.
+
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                                                            NAMES
+84d8670d8cca   mysql     "docker-entrypoint.s…"   25 seconds ago   Up 22 seconds   3306/tcp, 33060/tcp, 0.0.0.0:3307->3307/tcp, :::3307->3307/tcp   mysql_projeto_full
+         
+
+como eu tenho uma extensão do dataBase no meu vscode vou fazer a conexcao com a minha maquina com o container pois configuramos a porta 3306 e a senha do usario root
+
+porem para fazer as tabelas vamos usar o workbench também! e vamos usar a parte de modelagem dos dados porem tem um curso especifico somente pra modelagen de dados onde a modelagem e construida e baseada na regra de negocios do projeto.
+
+
+
+
+
+
+
     
 
 
