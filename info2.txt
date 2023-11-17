@@ -246,7 +246,7 @@ Agora vamos partir para o docker onde vamos incluir uma estancia do mysql do  do
  
  o comando que vamos utilizar no docker para gerar o container do mysql e executar será:
  
-    sudo docker run --rm -p 3307:3307 --name mysql_projeto_full -e MYSQL_ROOT_PASSWORD=root -d mysql
+    sudo docker run --rm -p 3306:3306 --name mysql_projeto_full -e MYSQL_ROOT_PASSWORD=root -d mysql
 
     Estamos usando a flag -rm  para toda vex que darmos um stop no container ele seja automaticamente excluido dessa maneira não acumulamos container sem utilidadades.
     
