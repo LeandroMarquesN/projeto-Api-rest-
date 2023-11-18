@@ -1,0 +1,10 @@
+{
+    "env": {
+        "MYSQL_HOST":"localhost",
+        "MYSQL_USER":"root",
+        "MYSQL_PASSWORD":"root",
+        "MYSQL_DATABASE":"Ecomerce_projeto_full_stack",
+        "PORT":3306,
+        "host":"localhost"
+    }
+}

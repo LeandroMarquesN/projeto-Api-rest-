@@ -267,6 +267,45 @@ porem para fazer as tabelas vamos usar o workbench também! e vamos usar a parte
 
 
 
+======= Atenção preiso recaptular desdeesse ponto ============
+
+=================================================================================
+
+Conectando a api com o banco de dados.
+
+para complemento e entender melhor como criar uma conection segura com o banco de dados  veja o link abaixo:
+
+https://community.revelo.com.br/como-conectar-um-banco-de-dados-ao-javascript/
+
+
+== Agora seguimos para a continuaçãoda playlist : https://www.youtube.com/watch?v=642J5YzLXDk&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=8&ab_channel=Maransatto
+
+
+Agora que ja temso o nosso banco de dados  criado e a nossa api precisamos conectalos e para isso devemos baixar outra biblioteca. 
+
+A biblioteca queprecisa ser baixada e a do mysql2 e vamos abaixar ela atraves do npm.
+
+    comando que deve ser rodado:
+    
+    npm install --save mysql2
+    
+Ate o momento temos essas estenções instaladas em nosso projeto:
+
+ "author": "Leandro Marques",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+
+
+Agora vamos criar um arquivo chamado mysql.js
 
 
 
