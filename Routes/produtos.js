@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const bancoDados = require("./BD")
+const bancoDados = require("./BD");
+const { pool } = require("../mysql");
+const mysql = require('../mysql').pool
 
 //======= RETORNA TODOS OS PRODUTOS =================================
 router.get('/', (req, resp, next) => {
@@ -19,6 +21,10 @@ router.post('/', (req, resp, next) => {
             preco: req.body.preco
         }
     );
+    // parei nesta linha !!!!! devo terinar o codigo
+    mysql.getConnection(pool)
+
+
     resp.status(201).send({
         menssagen: "metodo post dentro da rota de produtos",
         menss: "pedido Criado com sucesso",
