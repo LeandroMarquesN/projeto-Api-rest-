@@ -382,8 +382,48 @@ logo abaixo fazemos exports dessa função que demos o nome de "pool".
 Agora indo para o arquivo produtos.js vamos naparte onde estabelecemos a nossa requisição do tipo post.
 
 
+// ====== INSERI UM PRODUTO  ========================================
+router.post('/', (req, resp, next) => {
+
+ 
+    //===== CONECTANDO MYSQL COM BANCO DE DADOS =====
 
 
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            `insert into produtos (nome,preco) values (?,?);`,
+            [req.body.nome, req.body.preco],
+            (error, resultado, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    })
+                } else {
+
+                    resp.status(201).send({
+                        menssagen: "Produto inserido com sucesso",
+                        // produtoCriado: produto,
+                        id: resultado.insertId
+                    });
+                }
+
+
+            });
+    });
+
+
+});
+
+
+O detalhe é que temos que usar os verbos em conjunto por exemplo o metodo inserir do mysql estamos utilizando no verbo de requisição http post .
+
+ é claro que precisamos incluir o require() chamando o mysql2 e trazendo tambem a nossa função de conexao o pool
+
+o codigo é esse:
+    const mysql = require('../mysql').pool;
     
     
 
