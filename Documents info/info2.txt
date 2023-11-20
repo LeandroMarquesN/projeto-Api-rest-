@@ -315,12 +315,12 @@ Ate o momento temos essas estenções instaladas em nosso projeto:
 
 Agora vamos criar um arquivo chamado mysql.js
 
-!! Atenção dando continuidade aos trbalhos importante salientar que toda vexz que iniciarmos  a API devemos recriar restartar o nosso servidor e tambem devemos executar o comando do dokcer para criar o container mysql.
+!! Atenção dando continuidade aos trbalhos importante salientar que toda vez que iniciarmos  a API devemos recriar restartar o nosso servidor e tambem devemos executar o comando do dokcer para criar o container mysql.
 
-isso porque ainda nao configramos o volume do nosso container nesse projeto porem não é muito dificil de se fazer sugiro que de uma olhada na pasta de docker onde estamos abordando esse assunto sobre volumes no docker.
+isso porque ainda nao configramos os volumes nomeados  do nosso container nesse projeto porem não é muito dificil de se fazer sugiro que de uma olhada na pasta de docker onde estamos abordando esse assunto sobre volumes no docker.
 
 
-Esse codigo que vou colocar abaixo está incompleto deve ser estudado a possibilidade de colocar flags de volume para não perdermos o nosso banco de dados toda vez que inciarmos o projeto.
+Esse codigo que vou colocar abaixo está incompleto deve ser estudado a possibilidade de colocar flags de volume nomeados para não perdermos o nosso banco de dados toda vez que inciarmos o projeto.
 
     sudo docker run --rm -p 3306:3306 --name mysql_projeto_full -e MYSQL_ROOT_PASSWORD=root -d mysql
 
@@ -330,6 +330,60 @@ Esse codigo que vou colocar abaixo está incompleto deve ser estudado a possibil
     seguindo este video.
     
     https://www.youtube.com/watch?v=gGc46-AOa_I&ab_channel=Maransatto
+    
+    
+    
+Para começar os trabalhos com a conexão da nossa API com banco de dados que criamos primeiramentevamos ter que criar 2 arquivos 
+
+    1ª nodemon.jaso ==> que em um arquivo de configuração no formato jason onde vamos guardar as nossas variavei de ambiente.
+    
+    2ª mysql.js ==> nesse arquivo vamos inportar um modulo que devemos instalar nas nossas dependencias do nosso projeto waaw modulo é o "mysql2" 
+    
+em nosso arquivo nodemon.jason teremos as variaveis de ambiente onde é um objeto que possui um atributo chamado "env".
+
+{
+    "env": {
+        "MYSQL_USER":"root",
+        "MYSQL_PASSWORD":"root",
+        "MYSQL_DATABASE":"Ecomerce_projeto_full_stack",
+        "MYSQL_HOST":"localhost",
+        "PORT":3306,
+        "PORTT":3002
+       
+    }
+}
+analise as variaveis corretamente par que não haja nenhum problema no momento queatribuirmos elas a nossa conexao.
+
+agora vamos no arquivo criado o "mysql.js" e vamos criar o codigo de conexao com o banco de dados:
+
+const mysql = require('mysql2');
+
+let pool = mysql.createPool({
+
+    "user": process.env.MYSQL_USER,
+    "password": process.env.MYSQL_PASSWORD,
+    "database": process.env.MYSQL_DATABASE,
+    "host": process.env.MYSQL_HOST,
+    "port": process.env.PORT
+
+});
+
+
+exports.pool = pool;
+
+note que temos uma constante chamada de mysql onde estamos usando o require() para trazer o modulo mysql2.
+
+Logo abaixo temos uma variavel "pool" onde ela conciste em criar a nossa conexão e usamos o "mysql.createPool() 
+
+E como parametro para o createPool passamos um objeto contendo as nossas variaveis de ambiente .
+
+logo abaixo fazemos exports dessa função que demos o nome de "pool".
+
+Agora indo para o arquivo produtos.js vamos naparte onde estabelecemos a nossa requisição do tipo post.
+
+
+
+
     
     
 
