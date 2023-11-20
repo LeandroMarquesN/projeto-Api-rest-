@@ -385,13 +385,22 @@ Agora indo para o arquivo produtos.js vamos naparte onde estabelecemos a nossa r
 // ====== INSERI UM PRODUTO  ========================================
 router.post('/', (req, resp, next) => {
 
- 
+    // const produto = bancoDados.cadastrarProduto(
+    //     {
+    //         id: req.params.id,
+    //         nome: req.body.nome,
+    //         preco: req.body.preco
+    //     }
+    // );
+    // ==============================================
     //===== CONECTANDO MYSQL COM BANCO DE DADOS =====
 
-
+    // query de inserção nuito usado quando temos um aquery muito grande
+    const query = `insert into produtos (nome,preco) values (?,?);`;
+    // Criando o pool de conexao
     mysql.getConnection((error, conn) => {
         conn.query(
-            `insert into produtos (nome,preco) values (?,?);`,
+            query,
             [req.body.nome, req.body.preco],
             (error, resultado, fields) => {
                 conn.release();
@@ -402,15 +411,13 @@ router.post('/', (req, resp, next) => {
                         response: null
                     })
                 } else {
-
+                    // stado 201 siguinifica um alateração no banco
                     resp.status(201).send({
                         menssagen: "Produto inserido com sucesso",
                         // produtoCriado: produto,
                         id: resultado.insertId
                     });
                 }
-
-
             });
     });
 

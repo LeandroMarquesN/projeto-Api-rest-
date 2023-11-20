@@ -40,15 +40,13 @@ router.post('/', (req, resp, next) => {
                         response: null
                     })
                 } else {
-
+                    // stado 201 siguinifica um alateração no banco
                     resp.status(201).send({
                         menssagen: "Produto inserido com sucesso",
                         // produtoCriado: produto,
                         id: resultado.insertId
                     });
                 }
-
-
             });
     });
 
