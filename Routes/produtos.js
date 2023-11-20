@@ -21,12 +21,15 @@ router.post('/', (req, resp, next) => {
     //         preco: req.body.preco
     //     }
     // );
+    // ==============================================
     //===== CONECTANDO MYSQL COM BANCO DE DADOS =====
 
-
+    // query de inserção nuito usado quando temos um aquery muito grande
+    const query = `insert into produtos (nome,preco) values (?,?);`;
+    // Criando o pool de conexao
     mysql.getConnection((error, conn) => {
         conn.query(
-            `insert into produtos (nome,preco) values (?,?);`,
+            query,
             [req.body.nome, req.body.preco],
             (error, resultado, fields) => {
                 conn.release();

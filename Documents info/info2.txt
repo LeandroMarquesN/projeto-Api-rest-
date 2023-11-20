@@ -416,11 +416,18 @@ router.post('/', (req, resp, next) => {
 
 
 });
+Os comando mais inportantes do codigo acima e do mysql.getConnection()
+onde criamos a nossa conexao depois temos :
+
+conn.query ==> onde executamos a codigo mysql para o que pretendemos que no caso é um aserção de dados.
+
+E temos tambem o:
+    conn.release ==> para liberar a conexao, se não oclocarmos esse comando iremos acabar acumulando coneções no banco e isso não e desejavel. por isso ele é muito importante pois uma hora ele vai travar.
 
 
-O detalhe é que temos que usar os verbos em conjunto por exemplo o metodo inserir do mysql estamos utilizando no verbo de requisição http post .
+O detalhe é que temos que usar os verbos em conjunto dos verbos do mysql insert por exemplo o metodo inserir do mysql estamos utilizando no verbo de requisição http post em conjunto.
 
- é claro que precisamos incluir o require() chamando o mysql2 e trazendo tambem a nossa função de conexao o pool
+ é claro que precisamos incluir o require() chamando o mysql2 para o arquivo de produtos.js e trazendo tambem a nossa função de conexao o pool
 
 o codigo é esse:
     const mysql = require('../mysql').pool;
