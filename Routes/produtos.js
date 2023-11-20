@@ -5,11 +5,32 @@ const router = express.Router();
 const mysql = require('../mysql').pool;
 
 //======= RETORNA TODOS OS PRODUTOS =================================
+// ------ METODO GET RETORNA TODOS OSO PRODUTOS   ---------
 router.get('/', (req, resp, next) => {
-    resp.status(200).send({
-        menssagen: "USANDO O GET DENTRO DA ROTAS DE PRODUTOS",
-        menssagen: "retorna todos os  produtos"
-    })
+
+    const query = "select * from produtos;"
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            (error, results, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(200).send({
+                        error: null,
+                        response: results
+                    });
+                }
+
+            });
+    });
+
 });
 // ====== INSERI UM PRODUTO  ========================================
 router.post('/', (req, resp, next) => {

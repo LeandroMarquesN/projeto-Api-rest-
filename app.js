@@ -4,7 +4,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser')
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
 // app.use(bodyParser.json) //comentada pois se esta linnha estiver descomentada o codigo não vai funcionarIO
 
 // ========= TRATANDO O CORS CONFIGURAÇÃO DE CABECALHOS==============
