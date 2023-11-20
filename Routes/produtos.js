@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const bancoDados = require("./BD");
-const { pool } = require("../mysql");
-const mysql = require('../mysql').pool
+// const bancoDados = require("./BD");
+
+const mysql = require('../mysql').pool;
 
 //======= RETORNA TODOS OS PRODUTOS =================================
 router.get('/', (req, resp, next) => {
@@ -14,22 +14,42 @@ router.get('/', (req, resp, next) => {
 // ====== INSERI UM PRODUTO  ========================================
 router.post('/', (req, resp, next) => {
 
-    const produto = bancoDados.cadastrarProduto(
-        {
-            id: req.params.id,
-            nome: req.body.nome,
-            preco: req.body.preco
-        }
-    );
-    // parei nesta linha !!!!! devo terinar o codigo
-    mysql.getConnection(pool)
+    // const produto = bancoDados.cadastrarProduto(
+    //     {
+    //         id: req.params.id,
+    //         nome: req.body.nome,
+    //         preco: req.body.preco
+    //     }
+    // );
+    //===== CONECTANDO MYSQL COM BANCO DE DADOS =====
 
 
-    resp.status(201).send({
-        menssagen: "metodo post dentro da rota de produtos",
-        menss: "pedido Criado com sucesso",
-        produtoCriado: produto
-    })
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            `insert into produtos (nome,preco) values (?,?);`,
+            [req.body.nome, req.body.preco],
+            (error, resultado, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    })
+                } else {
+
+                    resp.status(201).send({
+                        menssagen: "Produto inserido com sucesso",
+                        // produtoCriado: produto,
+                        id: resultado.insertId
+                    });
+                }
+
+
+            });
+    });
+
+
 });
 // ======= RETORNA UM PRODUTO COM UM PARAMETRO ESPECIFICO ============
 
