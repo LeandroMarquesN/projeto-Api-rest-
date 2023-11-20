@@ -4,7 +4,7 @@ const router = express.Router();
 
 const mysql = require('../mysql').pool;
 
-//======= RETORNA TODOS OS PRODUTOS =================================
+
 // ------ METODO GET RETORNA TODOS OSO PRODUTOS   ---------
 router.get('/', (req, resp, next) => {
 
@@ -32,22 +32,14 @@ router.get('/', (req, resp, next) => {
     });
 
 });
-// ====== INSERI UM PRODUTO  ========================================
+// ------- METODO POST INSERI UM PRODUTO --------- 
 router.post('/', (req, resp, next) => {
 
-    // const produto = bancoDados.cadastrarProduto(
-    //     {
-    //         id: req.params.id,
-    //         nome: req.body.nome,
-    //         preco: req.body.preco
-    //     }
-    // );
-    // ==============================================
-    //===== CONECTANDO MYSQL COM BANCO DE DADOS =====
+    //----- CONECTANDO MYSQL COM BANCO DE DADOS ---
 
-    // query de inserção nuito usado quando temos um aquery muito grande
+    //----- query de inserção nuito usado quando temos um aquery muito grande
     const query = `insert into produtos (nome,preco) values (?,?);`;
-    // Criando o pool de conexao
+    //---- Criando o pool de conexao
     mysql.getConnection((error, conn) => {
         conn.query(
             query,
@@ -78,20 +70,29 @@ router.post('/', (req, resp, next) => {
 // ==== Usando o get na rota produtos com passagem de parametros ====
 
 router.get('/:id_produto', (req, resp, next) => {
-    const id = req.params.id_produto
 
-    if (id === 'especial') {
+    const query = `select * from produtos where idprodutos =${req.params.id_produto};`
 
-        resp.status(200).send({
-            menssagen: "voce encontrou o id especial",
-            parametro_id: id
-        })
-    } else {
-        resp.status(200).send({
-            menssagen: "voce passou um id que não é especial!",
-            parametro_id: `voce colocou o id ${id} e ele não é especial`
-        })
-    }
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            (error, results, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(200).send({
+                        error: null,
+                        response: results
+                    });
+                }
+
+            });
+    });
 })
 
 // ========== ALTERA O PRODUTO ============== 
