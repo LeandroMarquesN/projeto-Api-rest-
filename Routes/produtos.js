@@ -65,9 +65,7 @@ router.post('/', (req, resp, next) => {
 
 
 });
-// ======= RETORNA UM PRODUTO COM UM PARAMETRO ESPECIFICO ============
-
-// ==== Usando o get na rota produtos com passagem de parametros ====
+//---- METODO GET RETORNA UM PRODUTO COM UM PARAMETRO ESPECIFICO ----
 
 router.get('/:id_produto', (req, resp, next) => {
 
@@ -85,7 +83,7 @@ router.get('/:id_produto', (req, resp, next) => {
                         response: null
                     });
                 } else {
-                    resp.status(200).send({
+                    resp.status(201).send({
                         error: null,
                         response: results
                     });
@@ -95,18 +93,61 @@ router.get('/:id_produto', (req, resp, next) => {
     });
 })
 
-// ========== ALTERA O PRODUTO ============== 
-router.patch('/', (req, resp, next) => {
-    resp.status(201).send({
-        menssagem: "Usando o PATCH dentro da rota de produtos"
-    })
-})
+//---- METODO PATCH ALTERA O PRODUTO------- 
 
-// ========== DELETA O PRODUTO ==============
+
+router.patch('/', (req, resp, next) => {
+
+    const query = 'update produtos set nome=?,preco=? where idProdutos =?';
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            [req.body.nome, req.body.preco, req.body.idProdutos],
+            (error, results, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(200).send({
+                        error: null,
+                        menssagen: 'Produto atualizado com sucesso!!',
+
+                    });
+                }
+            });
+    });
+});
+
+//---- METODO DELETE DELETA UM  PRODUTO -----
 router.delete('/', (req, resp, next) => {
-    resp.status(201).send({
-        menssagem: "Usando o DELETE dentro da rota de produtos"
-    })
+    const query = 'delete from produtos where idProdutos =?';
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            [req.body.idProdutos],
+            (error, results, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(200).send({
+                        error: null,
+                        menssagen: 'Produto removido com sucesso!!',
+
+                    });
+                }
+            });
+    });
 })
 
 

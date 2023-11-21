@@ -33,13 +33,6 @@ const rotasPedidos = require('./Routes/pedidos')
 
 app.use(morgan('dev'));
 
-
-// ========= TRATANDO ERROS CORS ========
-
-
-
-
-
 // ===  ROTAS DE PRODUTOS =======
 app.use('/produtos', rotasProdutos);
 // === ROTAS DE PEDIDOS ======
