@@ -380,7 +380,9 @@ E como parametro para o createPool passamos um objeto contendo as nossas variave
 logo abaixo fazemos exports dessa função que demos o nome de "pool".
 
 Agora indo para o arquivo produtos.js vamos naparte onde estabelecemos a nossa requisição do tipo post.
-
+---------------------------------------------------------------------
+            ------  METHODO POST -----
+---------------------------------------------------------------------
 
 // ====== INSERI UM PRODUTO  ========================================
 router.post('/', (req, resp, next) => {
@@ -440,6 +442,9 @@ o codigo é esse:
     const mysql = require('../mysql').pool;
     
 ---------------------------------------------------------------------
+            ------  METHODO GET -----
+---------------------------------------------------------------------
+        
 Agora que ja temos a nossa api conectada com o banco de dados, e tambem ja implementamons o methodo de inserção de dados do mysql em conjunto com methodo post, vamos criar o methodo de slecionar do mysql em conjunto do getConnection
 
 
@@ -489,14 +494,94 @@ Perceba que a estrutura do codigo e a mesma porem temos que mudar a query onde e
         `select * from produtos where "idprodutos" =${req.params.id_produto};`
         
         Agora o "idProduto" que está sendo passado na sintaxe do sql e a nossa coluna do banco de dados que vamso fazer a busca e importante que não confunda.
-------------------------------------------------------------------------------
-     
 
+     
+---------------------------------------------------------------------
+            ------  METHODO PACTH -----
+---------------------------------------------------------------------
+    
+router.patch('/', (req, resp, next) => {
+
+    const query = 'update produtos set nome=?,preco=? where idProdutos =?';
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            [req.body.nome, req.body.preco, req.body.idProdutos],
+            (error, results, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(200).send({
+                        error: null,
+                        menssagen: 'Produto atualizado com sucesso!!',
+
+                    });
+                }
+            });
+    });
+});
+
+Aqui estamos implemntado o methodo patch então a query que estamos usando é essa:
+
+     const query = 'update produtos set nome=?,preco=? where idProdutos =?';
+     
+     perceba um detalhe muito importante que a orden do nome preco e idprodutos estão na mesma sequencia do array que passamos para servir de referencia pra alteração do nosso banco de dados.
+     
+      [req.body.nome, req.body.preco, req.body.idProdutos],
+      
+      E muito importante que tenhamos atenção nesse ponto.
+      
+---------------------------------------------------------------------
+            ------  METHODO DELETE -----
+---------------------------------------------------------------------
+
+aAgora vamos para o methodo delete onde termeos esse codigo:
+
+router.delete('/', (req, resp, next) => {
+    const query = 'delete from produtos where idProdutos =?';
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            [req.body.idProdutos],
+            (error, results, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(200).send({
+                        error: null,
+                        menssagen: 'Produto removido com sucesso!!',
+
+                    });
+                }
+            });
+    });
+})
+
+Aqui é a mesma coisa onde vamos usar a query sql :
+
+    const query = 'delete from produtos where idProdutos =?';
+    
+    E perceba que estamos selecionando  o idProduto onde será a referencia para o elemento que queremos deletar em nosso banco de dados.
+    
+    E o idProduto da nossa query sql vai se refereir ao elemento desse array   [req.body.idProdutos],
+    E então seguimos com a estrutura do codigo.
+    
+    
     
 
-
-
-
+    
     
 
 
