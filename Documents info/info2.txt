@@ -395,7 +395,7 @@ router.post('/', (req, resp, next) => {
     // ==============================================
     //===== CONECTANDO MYSQL COM BANCO DE DADOS =====
 
-    // query de inserção nuito usado quando temos um aquery muito grande
+    // query de inserção muito usado quando temos uma query muito grande
     const query = `insert into produtos (nome,preco) values (?,?);`;
     // Criando o pool de conexao
     mysql.getConnection((error, conn) => {
@@ -439,6 +439,59 @@ O detalhe é que temos que usar os verbos em conjunto dos verbos do mysql insert
 o codigo é esse:
     const mysql = require('../mysql').pool;
     
+---------------------------------------------------------------------
+Agora que ja temos a nossa api conectada com o banco de dados, e tambem ja implementamons o methodo de inserção de dados do mysql em conjunto com methodo post, vamos criar o methodo de slecionar do mysql em conjunto do getConnection
+
+
+//---- METODO GET RETORNA UM PRODUTO COM UM PARAMETRO ESPECIFICO ----
+
+router.get('/:id_produto', (req, resp, next) => {
+
+    const query = `select * from produtos where idprodutos =${req.params.id_produto};`
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            (error, results, fields) => {
+                conn.release();
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(201).send({
+                        error: null,
+                        response: results
+                    });
+                }
+
+            });
+    });
+})           
+Perceba que a estrutura do codigo e a mesma porem temos que mudar a query onde estamosusando um asintaxe sql:
+
+     const query = `select * from produtos where idprodutos =${req.params.id_produto};`
+     
+     um dos comando dessa estrutura que temos que gravar e é muito importante e a chamda do :
+        mysq.getConnection((error,conn) =>{}
+        e dentro do bloco dessa função temos que usar a callback onde possui os parametros :
+        
+            (error,results,fields) =>{
+            conn.release();
+            
+            estrutra condicional para tratar os erros
+            } e agora fechamos o bloco.
+            
+    Perceba que nessa query estamos usando pegando um parametro que foipassado na url: o req.params.id_produto
+    
+        `select * from produtos where "idprodutos" =${req.params.id_produto};`
+        
+        Agora o "idProduto" que está sendo passado na sintaxe do sql e a nossa coluna do banco de dados que vamso fazer a busca e importante que não confunda.
+------------------------------------------------------------------------------
+     
+
     
 
 
