@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
 // const bancoDados = require("./BD");
-
 const mysql = require('../mysql').pool;
 
-
-// ------ METODO GET RETORNA TODOS OSO PRODUTOS   ---------
+// ------ METODO GET RETORNA TODOS OS PRODUTOS   ---------
 router.get('/', (req, resp, next) => {
 
     const query = "select * from produtos;"
@@ -16,6 +14,22 @@ router.get('/', (req, resp, next) => {
             (error, results, fields) => {
                 conn.release();
 
+                const response = {
+                    quantidade: results.length,
+                    produtos: results.map(prod => {
+                        return {
+                            id_produto: prod.idprodutos,
+                            nome: prod.nome,
+                            preco: prod.preco,
+                            request: {
+                                tipo: "GET",
+                                descricao: "",
+                                url: 'http://localhost:3002/produtos/' + prod.idprodutos
+                            }
+                        }
+                    })
+                }
+
                 if (error) {
                     resp.status(500).json({
                         error: error,
@@ -24,7 +38,7 @@ router.get('/', (req, resp, next) => {
                 } else {
                     resp.status(200).send({
                         error: null,
-                        response: results
+                        response: response
                     });
                 }
 
