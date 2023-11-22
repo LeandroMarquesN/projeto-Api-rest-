@@ -275,6 +275,8 @@ CONECTANDO API COM BANCO DE DADOS
 sugiro que veja esse vide referente a conecção caso haja alguma duvida.
 
 https://www.youtube.com/watch?v=gGc46-AOa_I&ab_channel=Maransatto
+
+https://www.youtube.com/watch?v=gGc46-AOa_I&ab_channel=Maransatto
 ===================================================================================
 segunda opação de explicação de conexao de banco de dadosdo canal CFBCursos.
 
@@ -579,9 +581,23 @@ Aqui é a mesma coisa onde vamos usar a query sql :
     E então seguimos com a estrutura do codigo.
     
     
-    
 
-    
+-----rascunho ------
+ // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
+                // const response = {
+                //     menssagen: "Produto inserido com sucesso",
+                //     produtoCriado: {
+                //         id_produto: results.idprodutos,
+                //         nome: req.body.nome,
+                //         preco: req.body.preco,
+                //         request: {
+                //             tipo: "POST",
+                //             descricao: "Insere um produto",
+                //             url: 'http://localhost:3002/produtos'
+                //         }
+                //     }
+                // }
+
     
 
 

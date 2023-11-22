@@ -14,6 +14,7 @@ router.get('/', (req, resp, next) => {
             (error, results, fields) => {
                 conn.release();
 
+                // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
                 const response = {
                     quantidade: results.length,
                     produtos: results.map(prod => {
@@ -23,7 +24,7 @@ router.get('/', (req, resp, next) => {
                             preco: prod.preco,
                             request: {
                                 tipo: "GET",
-                                descricao: "",
+                                descricao: "Retorna todos os produtos",
                                 url: 'http://localhost:3002/produtos/' + prod.idprodutos
                             }
                         }
@@ -49,31 +50,50 @@ router.get('/', (req, resp, next) => {
 // ------- METODO POST INSERI UM PRODUTO --------- 
 router.post('/', (req, resp, next) => {
 
-    //----- CONECTANDO MYSQL COM BANCO DE DADOS ---
-
-    //----- query de inserção nuito usado quando temos um aquery muito grande
-    const query = `insert into produtos (nome,preco) values (?,?);`;
-    //---- Criando o pool de conexao
+    const produto = {
+        nome: req.body.nome,
+        preco: req.body.preco
+    }
+    const query = `insert into produtos (nome,preco) values (?,?);`
     mysql.getConnection((error, conn) => {
         conn.query(
             query,
-            [req.body.nome, req.body.preco],
-            (error, resultado, fields) => {
+            [produto.nome, req.body.preco],
+            (error, results, fields) => {
                 conn.release();
+
+                // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
+                const response = {
+                    menssagen: "Produto inserido com sucesso",
+                    produtoCriado: {
+                        id_produto: results.idprodutos,
+                        nome: req.body.nome,
+                        preco: req.body.preco,
+                        request: {
+                            tipo: "POST",
+                            descricao: "Insere um produto",
+                            url: 'http://localhost:3002/produtos'
+                        }
+                    }
+                }
+
+
 
                 if (error) {
                     resp.status(500).json({
                         error: error,
                         response: null
-                    })
+                    });
                 } else {
-                    // stado 201 siguinifica um alateração no banco
                     resp.status(201).send({
-                        menssagen: "Produto inserido com sucesso",
-                        // produtoCriado: produto,
-                        id: resultado.insertId
+                        error: null,
+                        menss: "produto inserido",
+                        response: response
+
                     });
                 }
+                // stado 201 siguinifica um alateração no banco
+
             });
     });
 
