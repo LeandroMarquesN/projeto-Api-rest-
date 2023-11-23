@@ -10,16 +10,16 @@ router.get('/', (req, resp, next) => {
             (error, result, fields) => {
                 conn.release();
                 const response = {
-                    qunatidade: result.length,
+                    quantidade: result.length,
                     pedidos: result.map(pedido => {
                         return {
-                            idpedidos: pedido.idpedidos,
+                            id_pedido: pedido.id_pedido,
+                            id_produto: pedido.id_produto,
                             quantidade: pedido.quantidade,
-                            produtos_idprodutos: pedido.produtos_idprodutos,
                             request: {
                                 tipo: "GET",
                                 descricao: "Retorna detalhes do pedido",
-                                url: 'http://localhost:3002/pedidos/' + pedido.idpedidos
+                                url: 'http://localhost:3002/pedidos/' + pedido.id_pedido
                             }
                         }
                     })
