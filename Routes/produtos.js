@@ -24,7 +24,7 @@ router.get('/', (req, resp, next) => {
                             preco: prod.preco,
                             request: {
                                 tipo: "GET",
-                                descricao: "Retorna todos os produtos",
+                                descricao: "Retorna detalhes do produto",
                                 url: 'http://localhost:3002/produtos/' + prod.idprodutos
                             }
                         }
@@ -77,8 +77,6 @@ router.post('/', (req, resp, next) => {
                     }
                 }
 
-
-
                 if (error) {
                     resp.status(500).json({
                         error: error,
@@ -111,6 +109,28 @@ router.get('/:id_produto', (req, resp, next) => {
             (error, results, fields) => {
                 conn.release();
 
+                if (results.length == 0) {
+                    return resp.status(404).send({
+                        menssagen: "ID invalido!! produto não encontrado!!"
+                    });
+                }
+
+                // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
+                const response = {
+
+                    produto: {
+                        menssagen: "Produto Encontrado",
+                        id_produto: results[0].idprodutos,
+                        nome: results[0].nome,
+                        preco: results[0].preco,
+                        request: {
+                            tipo: "GET",
+                            descricao: "Retorna os detalhes de um produto especifico",
+                            url: 'http://localhost:3002/produtos'
+                        }
+                    }
+                }
+
                 if (error) {
                     resp.status(500).json({
                         error: error,
@@ -119,7 +139,7 @@ router.get('/:id_produto', (req, resp, next) => {
                 } else {
                     resp.status(201).send({
                         error: null,
-                        response: results
+                        response: response
                     });
                 }
 
@@ -137,9 +157,24 @@ router.patch('/', (req, resp, next) => {
     mysql.getConnection((error, conn) => {
         conn.query(
             query,
-            [req.body.nome, req.body.preco, req.body.idProdutos],
+            [req.body.nome, req.body.preco, req.body.id_produto],
             (error, results, fields) => {
                 conn.release();
+
+
+                const response = {
+                    menssagen: 'Produto atualizado com sucesso!!',
+                    produtoAtualizado: {
+                        id_produto: req.body.id_produto,
+                        nome: req.body.nome,
+                        preco: req.body.preco,
+                        request: {
+                            tipo: "GET",
+                            descricao: "SELECIONA UM PRODUTO ESEPECIFICO",
+                            url: 'http://localhost:3002/produtos/' + req.body.id_produto
+                        }
+                    }
+                }
 
                 if (error) {
                     resp.status(500).json({
@@ -147,10 +182,9 @@ router.patch('/', (req, resp, next) => {
                         response: null
                     });
                 } else {
-                    resp.status(200).send({
+                    resp.status(202).send({
                         error: null,
-                        menssagen: 'Produto atualizado com sucesso!!',
-
+                        response: response
                     });
                 }
             });
@@ -164,10 +198,21 @@ router.delete('/', (req, resp, next) => {
     mysql.getConnection((error, conn) => {
         conn.query(
             query,
-            [req.body.idProdutos],
+            [req.body.id_produto],
             (error, results, fields) => {
                 conn.release();
-
+                const response = {
+                    menssagen: "Produlto removido com sucesso!!",
+                    request: {
+                        tipo: "POST",
+                        descricao: "INSERI UM PRODUTO ESEPECIFICO",
+                        url: 'http://localhost:3002/produtos/',
+                        body: {
+                            nome: "String",
+                            preco: "Number"
+                        }
+                    }
+                }
                 if (error) {
                     resp.status(500).json({
                         error: error,
@@ -176,7 +221,7 @@ router.delete('/', (req, resp, next) => {
                 } else {
                     resp.status(200).send({
                         error: null,
-                        menssagen: 'Produto removido com sucesso!!',
+                        Response: response
 
                     });
                 }
