@@ -74,31 +74,129 @@ router.post('/', (req, resp, next) => {
 
 });
 
-// ============== RETORNA OS DADOS DE UM PRODUTO ==
+// == RETORNA OS DADOS DE UM PRODUTO ==
 router.get('/:id_pedido', (req, resp, next) => {
-    const id = req.params.id_pedido;
+    const query = `select * from pedidos where id_pedido =${req.params.id_pedido};`
 
-    if (id === "show") {
-        resp.status(200).send({
-            menssagem: `Você descobriu o id show que é  o => ${id}`
-        });
-    } else {
-        resp.status(200).send({
-            mennsagem: `Voce nao colocou o id especial!vc colcocou ${id}`
-        });
-    }
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            (error, results, fields) => {
+                conn.release();
+
+                if (results.length == 0) {
+                    return resp.status(404).send({
+                        menssagen: "ID invalido!! pedido não encontrado!!"
+                    });
+                }
+
+                // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
+                const response = {
+
+                    pedido: {
+                        menssagen: "Pedido Encontrado",
+                        id_pedido: results[0].id_pedido,
+                        Id_produto: results[0].id_produto,
+                        quantidade: results[0].quantidade,
+                        request: {
+                            tipo: "GET",
+                            descricao: "Retorna os detalhes de um pedido especifico",
+                            url: 'http://localhost:3002/pedidos'
+                        }
+                    }
+                }
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(201).send({
+                        error: null,
+                        response: response
+                    });
+                }
+
+            });
+    });
 });
-// ======= ALTERA UM PRODUTO =============
+// ======= ALTERA UM PEDIDO =============
 router.patch('/', (req, resp, next) => {
-    resp.status(201).send({
-        menssagem: "Altera um pedido"
-    })
+    const query = 'update pedidos set id_produto=?,quantidade=? where id_pedido =?';
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            [req.body.id_produto, req.body.quantidade, req.body.id_pedido],
+            (error, results, fields) => {
+                conn.release();
+
+
+                const response = {
+                    menssagen: 'Pedido atualizado com sucesso!!',
+                    produtoAtualizado: {
+                        id_pedido: req.body.id_pedido,
+                        id_produto: req.body.id_produto,
+                        quantidade: req.body.quantidade,
+                        request: {
+                            tipo: "GET",
+                            descricao: "SELECIONA UM PEDIDO ESEPECIFICO",
+                            url: 'http://localhost:3002/PEDIDOS/' + req.body.id_pedido
+                        }
+                    }
+                }
+
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(202).send({
+                        error: null,
+                        response: response
+                    });
+                }
+            });
+    });
 })
 
 // ========= DELETA um produto ==========
 router.delete('/', (req, resp, next) => {
-    resp.status(201).send({
-        menssagem: "Deleta um pedido!"
-    })
+    const query = 'delete from pedidos where id_pedido =?';
+
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            [req.body.id_pedido],
+            (error, results, fields) => {
+                conn.release();
+                const response = {
+                    menssagen: "Peido removido com sucesso!!",
+                    request: {
+                        tipo: "POST",
+                        descricao: "INSERI UM PEDIDO ESEPECIFICO",
+                        url: 'http://localhost:3002/pedidos/',
+                        body: {
+                            id_produto: "Number",
+                            Quantidade: "Number"
+                        }
+                    }
+                }
+                if (error) {
+                    resp.status(500).json({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(200).send({
+                        error: null,
+                        Response: response
+
+                    });
+                }
+            });
+    });
 })
 module.exports = router;
