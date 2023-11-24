@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool
-// =============== RETORNA TODOS OS PEDIDOS =====
+// -------- RETORNA TODOS PEDIDOS ---------
 router.get('/', (req, resp, next) => {
     const query = "select * from pedidos;"
     mysql.getConnection((error, conn) => {
@@ -38,42 +38,46 @@ router.get('/', (req, resp, next) => {
             });
     });
 });
-
 // -------  METHODO POST --------
-
 router.post('/', (req, resp, next) => {
 
-    const query = `insert into pedidos (id_produto,quantidade) values (?,?)`;
     mysql.getConnection((error, conn) => {
-        if (error) { return resp.status(500).json({ error: error, response: null }); }
+        if (error) { return resp.status(500).json({ error: error, response: null }); };
         conn.query(
-            query,
-            [req.body.id_produto, req.body.quantidade],
+            // ---- VERIFICANDO SE EXISTEM PRODUTOS -----
+            'SELECT * FROM  produtos where idprodutos = ? ',
+            [req.body.Idprodutos],
             (error, results, fields) => {
-                conn.release();
-                if (error) { return resp.status(500).json({ error: error, response: null }); }
-                // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
-                const response = {
-                    menssagen: "Pedido inserido com sucesso",
-                    pedidoCriado: {
-                        id_pedido: results.idpedido,
-                        id_produto: req.body.id_produto,
-                        quantidade: req.body.quantidade,
-                        request: {
-                            tipo: "GET",
-                            descricao: "RETORNA TODOS OS PEDIDOS",
-                            url: 'http://localhost:3002/pedidos'
+                if (error) { return resp.status(500).json({ error: error, response: null }); };
+                if (results.length == 0) { return resp.status(404).send({ menss: `Produto não encontrado!! verifique as informações!!` }) };
+                conn.query(
+                    `insert into pedidos (id_produto,quantidade) values (?,?)`,
+                    [req.body.id_produto, req.body.quantidade],
+                    (error, results, fields) => {
+                        conn.release();
+                        if (error) { return resp.status(500).json({ error: error, response: null }); }
+
+                        // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
+                        const response = {
+                            menssagen: "Pedido inserido com sucesso",
+                            pedidoCriado: {
+                                id_pedido: results.idpedido,
+                                id_produto: req.body.id_produto,
+                                quantidade: req.body.quantidade,
+                                request: {
+                                    tipo: "GET",
+                                    descricao: "RETORNA TODOS OS PEDIDOS",
+                                    url: 'http://localhost:3002/pedidos'
+                                }
+                            }
                         }
-                    }
-                }
-                return resp.status(201).send(response);
-                // stado 201 siguinifica um alateração no banco
+                        return resp.status(201).send(response);
+                        // stado 201 siguinifica um alateração no banco
+                    });
 
             });
     });
-
 });
-
 // == RETORNA OS DADOS DE UM PRODUTO ==
 router.get('/:id_pedido', (req, resp, next) => {
     const query = `select * from pedidos where id_pedido =${req.params.id_pedido};`
@@ -146,7 +150,6 @@ router.patch('/', (req, resp, next) => {
                         }
                     }
                 }
-
                 if (error) {
                     resp.status(500).json({
                         error: error,
@@ -173,7 +176,7 @@ router.delete('/', (req, resp, next) => {
             (error, results, fields) => {
                 conn.release();
                 const response = {
-                    menssagen: "Peido removido com sucesso!!",
+                    menssagen: "Pedido removido com sucesso!!",
                     request: {
                         tipo: "POST",
                         descricao: "INSERI UM PEDIDO ESEPECIFICO",
