@@ -44,37 +44,34 @@ router.post('/', (req, resp, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return resp.status(500).json({ error: error, response: null }); };
         conn.query(
-            // ---- VERIFICANDO SE EXISTEM PRODUTOS -----
-            'SELECT * FROM  produtos where idprodutos = ? ',
-            [req.body.Idprodutos],
+            `insert into pedidos (id_produto,quantidade) values (?,?)`,
+            [req.body.id_produto, req.body.quantidade],
             (error, results, fields) => {
-                if (error) { return resp.status(500).json({ error: error, response: null }); };
-                if (results.length == 0) { return resp.status(404).send({ menss: `Produto não encontrado!! verifique as informações!!` }) };
-                conn.query(
-                    `insert into pedidos (id_produto,quantidade) values (?,?)`,
-                    [req.body.id_produto, req.body.quantidade],
-                    (error, results, fields) => {
-                        conn.release();
-                        if (error) { return resp.status(500).json({ error: error, response: null }); }
+                conn.release();
+                if (error) { return resp.status(500).json({ error: error, response: null }); }
 
-                        // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
-                        const response = {
-                            menssagen: "Pedido inserido com sucesso",
-                            pedidoCriado: {
-                                id_pedido: results.idpedido,
-                                id_produto: req.body.id_produto,
-                                quantidade: req.body.quantidade,
-                                request: {
-                                    tipo: "GET",
-                                    descricao: "RETORNA TODOS OS PEDIDOS",
-                                    url: 'http://localhost:3002/pedidos'
-                                }
-                            }
-                        }
-                        return resp.status(201).send(response);
-                        // stado 201 siguinifica um alateração no banco
+                if (results.length == 0) {
+                    return resp.status(404).send({
+                        menssagen: " Pedido não encontrado!!"
                     });
+                }
 
+                // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
+                const response = {
+                    menssagen: "Pedido inserido com sucesso",
+                    pedidoCriado: {
+                        id_pedido: results.idpedido,
+                        id_produto: req.body.id_produto,
+                        quantidade: req.body.quantidade,
+                        request: {
+                            tipo: "GET",
+                            descricao: "RETORNA TODOS OS PEDIDOS",
+                            url: 'http://localhost:3002/pedidos'
+                        }
+                    }
+                }
+                return resp.status(201).send(response);
+                // stado 201 siguinifica um alateração no banco
             });
     });
 });
