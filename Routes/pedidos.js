@@ -17,7 +17,7 @@ router.get('/', (req, resp, next) => {
             (error, result, fields) => {
                 conn.release();
                 const response = {
-                    quantidade: result.length,
+
                     pedidos: result.map(pedido => {
                         return {
                             id_pedido: pedido.id_pedido,
