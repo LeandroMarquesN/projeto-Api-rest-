@@ -3,7 +3,14 @@ const router = express.Router();
 const mysql = require('../mysql').pool
 // -------- RETORNA TODOS PEDIDOS ---------
 router.get('/', (req, resp, next) => {
-    const query = "select * from pedidos;"
+    const query = `select  pedidos.id_pedido,
+                           pedidos.quantidade,
+                           produtos.idprodutos,
+                           produtos.nome,
+                           produtos.preco
+                      from pedidos
+                INNER JOIN produtos
+                        on produtos.idprodutos = pedidos.id_produto;`
     mysql.getConnection((error, conn) => {
         conn.query(
             query,
@@ -14,12 +21,16 @@ router.get('/', (req, resp, next) => {
                     pedidos: result.map(pedido => {
                         return {
                             id_pedido: pedido.id_pedido,
-                            id_produto: pedido.id_produto,
                             quantidade: pedido.quantidade,
+                            produto: {
+                                id_produto: pedido.idprodutos,
+                                nome: pedido.nome,
+                                preco: pedido.preco
+                            },
                             request: {
                                 tipo: "GET",
                                 descricao: "Retorna detalhes do pedido",
-                                url: 'http://localhost:3002/pedidos/' + pedido.id_pedido
+                                url: 'http://localhost:3002/pedidos' + pedido.id_pedido
                             }
                         }
                     })

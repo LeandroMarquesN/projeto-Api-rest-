@@ -167,7 +167,7 @@ router.patch('/', (req, resp, next) => {
                     produtoAtualizado: {
                         id_produto: req.body.id_produto,
                         nome: req.body.nome,
-                        preco: req.body.preco,
+                        preco: `R$ ${req.body.preco}`,
                         request: {
                             tipo: "GET",
                             descricao: "SELECIONA UM PRODUTO ESEPECIFICO",
