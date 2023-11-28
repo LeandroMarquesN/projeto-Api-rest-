@@ -3,6 +3,22 @@ const router = express.Router();
 // const bancoDados = require("./BD");
 const mysql = require('../mysql').pool;
 
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+
+    destination: function (req, file, callback) {
+        callback(null, 'upload/');
+
+    },
+    filename: function (req, file, callback) {
+
+        callback(null, new Date().toISOString() + '   ' + file.originalname)
+    }
+});
+
+const upload = multer({ storage: storage });
+
 // ------ METODO GET RETORNA TODOS OS PRODUTOS   ---------
 router.get('/', (req, resp, next) => {
 
@@ -48,8 +64,8 @@ router.get('/', (req, resp, next) => {
 
 });
 // ------- METODO POST INSERI UM PRODUTO --------- 
-router.post('/', (req, resp, next) => {
-
+router.post('/', upload.single('produto_imagem'), (req, resp, next) => {
+    console.log(req.file)
     const produto = {
         nome: req.body.nome,
         preco: req.body.preco
@@ -193,9 +209,9 @@ router.patch('/', (req, resp, next) => {
 
 //---- METODO DELETE DELETA UM  PRODUTO -----
 router.delete('/', (req, resp, next) => {
-    const query = 'delete from produtos where idProdutos =?';
 
     mysql.getConnection((error, conn) => {
+        const query = 'delete from produtos where idProdutos =?';
         conn.query(
             query,
             [req.body.id_produto],

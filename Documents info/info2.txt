@@ -699,14 +699,191 @@ Perceba que nosso objeto que estmos usando para retornar que é o response possu
 
 Otra detalhe importante e que dentro da conexão da query ==. conn.query() temos apenas 2 parametros que é a query com a sintaxe sql e a nossa calback perceba que por ser um arequisição do tipo get onde basta retornar o svamores que ja temos basta informar dentro da calback e ao objeto response que está dentro da calbak esses dados.
 
+----------- TENHO QUE DAR CONTINAÇAÕ A EXPLICAÇÃO DO CODIGO PAREI NA REQUISIÇÃO DO TIPO GET TENHO EXPLICAR TODOS OS METHODOS DA ROTA PEDIDOS 
+
+ref : https://www.youtube.com/watch?v=-bK8twr-Sd4&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=10&pp=iAQB&ab_channel=Maransatto
+
+essa video aula contem todas as informções para explicação da rota de pedidos
 
 
+continua...
+
+---------------------------------------------------------------------------------
 
 
+Dando continuidade:
+
+REF :
+
+https://www.youtube.com/watch?v=YM5TTZm8yRY&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=12&ab_channel=Maransatto
+
+vamos instalar mais algumas bibliotecas importantes 
+pois nessa aula vamos trabalhar com uploads de imagens do nosso projeto da "REST API"
+
+vamos instalar uma biblioteca para receber um outro formato de dados pois ate o momento so estmoas recebendo dados no corpo da requisição que é o body do tipo json 
+
+bom a ideia e trabalhar com dados binarios e stings onde vamos usar o form-dataBase
+
+e a biblioteca instalada será o multer.
+
+o codigo para instalar o multer no  NODE é:
+
+    npm install --save multer
+    
+E agora o nosso  package.json
+
+{
+  "name": "projeto-rest-api-node-docker-mysql",
+  "version": "1.0.0",
+  "description": "Teste de Rest Api",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "REST",
+    "API"
+  ],
+  "author": "Leandro Marques",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+
+perceba que agora temos o multer e devemos fazer o import desse modulo 
+Essa biblioteca é um aalternativa para pdermos tratar o form-data 
+
+Em nosso arquivo produtos incrementamos  aimportação do multer.
+
+const multer = require('multer');
+const upload = multer({ dest: 'upload/' });
+
+perceba que temos outra contante qu e a uploads onde estamos atribuindo o multer e como parametro para o multer temos um objeto que contem o detination  qu eaponta para um diretorio onde será guardaddo os arquivos
+
+porem ele deve ser um diretorio publico para poder ser acessado e não somente leitura.
 
 
+E dentro da rota de produtos no methodo post como segundo parametro entre a url  e a função middlaware passamos um objeto que vai servir de parametro onde podemos passar varios methodos.
+    upload.singel('produto_imagen'
 
 
+    
+    vou mostrar um trecho do codigo POST para mostrar apenas onde foi modificado:
+    
+// ------- METODO POST INSERI UM PRODUTO --------- 
+
+router.post('/', upload.single('produto_imagem'), (req, resp, next) => {
+    console.log(req.file)
+    
+--------------------------------------------------
+perceba que colocamos o upload.single('produto_imagen') como para metro entre a url que é o primeiro parametro e a função middlaware
+
+agora vamos reiniciar o servido da api
+
+    npm start
+    
+para que nosso servidor não de erro temos que no atentar a um detalhemuito importante quando passamos o coaminho para o diretorio uploadpois não devemos colocar um caminho absoluto devemos colocar o caminho  relativo assim==>
+
+    const upload = multer({ dest: 'upload/' });
+    
+perceba que o atributo dest do objeto aponta par o diretorio upload da maneira correta 
+se não for feita da maneria acima pode apresentar o erro abaixo:
+
+Error: EACCES: permission denied, mkdir '/upload'
+isso aconteceu por conta da barra que esta na frente de upload. devemos colocar assim:
+
+     const upload = multer({ dest: 'upload/' });
+     
+    Bom agora vamos testar no postman 
+    
+vamos fazer um anova requisição do tipo post 
+na url : http://localhost:3002/produtos
+
+agora selecionamos o body  e depois form-data
+
+agora inserimos as informações da requisição do tipo post que no caso e para incluir um novo produto no banco de dados:
+
+nome : geladeira
+preco : 105.99
+produto_imagem ; geladeira.jpeg
+
+um detalhe importante é que no campo  produto_imagem o postaman nos da a opção de file onde podemos buscar o arquivo da nossa maquina com a aextenção especifica 
+
+e basta apertar o send para enviar para api:
+
+então será passada esse objeto o response com as informações :
+
+{
+    "error": null,
+    "menss": "produto inserido",
+    "response": {
+        "menssagen": "Produto inserido com sucesso",
+        "produtoCriado": {
+            "nome": "geladeira",
+            "preco": "105.99",
+            "request": {
+                "tipo": "POST",
+                "descricao": "Insere um produto",
+                "url": "http://localhost:3002/produtos"
+            }
+        }
+    }
+}
+
+agora se formos ao terminal veremos que temos mais informações por conta do console.log(req.file) que é uma propriedade do multer.
+
+Servidor Rodando na porta 3002
+{
+  fieldname: 'produto_imagem',
+  originalname: 'geladeira.jpeg',
+  encoding: '7bit',
+  mimetype: 'image/jpeg',
+  destination: 'upload/',
+  filename: 'd5822fae73af3bc18b1cb8fdac287aac',
+  path: 'upload/d5822fae73af3bc18b1cb8fdac287aac',
+  size: 3303
+}
+POST /produtos 201 4025.020 ms - 248
+
+lembrando que as imagens eu baixei da internet e savei em uma pasta dentro do diretorio dowloads e dentro da pasta "imagens de produtos para API"
+
+
+So que nem tudo é flores !! se vc for no diretorio upload do nosso projeto onde foi guradados as imagems dos produtos vamos ver que elas estão sem o nome especifico e issso não é legal então vamos adicionar ao nosso arquivo produtos um codigo a mais com algumas funcionalidades.
+
+No arquivo produtos vamos criar uma constante chamada: storage onde vamos atribuir um apropriedade do multer que é a :multer.diskStorage({objeto}) e dentro teremos um objeto com varios methodos que vai ser passado abaixo:
+
+
+    const multer = require('multer');
+
+            const storage = multer.diskStorage({
+
+                destination: function (req, file, callback) {
+                    callback(null, '..upload/');
+
+                },
+                filename: function (req, file, callback) {
+
+                    callback(null, new Date().toISOString() + file.originalname)
+                }
+            });
+
+const upload = multer({ storage });
+
+perceba o posicionamento do codigo pois isso interfere de um aolhada no arquivo  produtos.js pois a nossa constante storage está posicionada  entre o require do multer e upload onde estamos atribuindo um stancia do multer
+
+agora voltamos para o postma e vamos fazer o mesmo precesso do post pra inserir produtos
+    
+   
 
 
 
