@@ -694,8 +694,10 @@ router.get('/', (req, resp, next) => {
 });
 
 
-Perceba que nosso objeto que estmos usando para retornar que é o response possui outras informções, isso por que essas informações vão variar de acordo com a necessidade e o tipo de requisição que estamos fazendo dentro da rota. aqui estmoa trabalahando com umareuqisição do tipo "GET" então precisamo retornar todas informações necessarias.
+Perceba que nosso objeto que estmos usando para retornar que é o response possui outras informções, isso por que essas informações vão variar de acordo com a necessidade e o tipo de requisição que estamos fazendo dentro da rota. aqui estamos trabalahando com uma reuqisição do tipo "GET" então precisamos retornar todas informações necessarias.
 
+
+Otra detalhe importante e que dentro da conexão da query ==. conn.query() temos apenas 2 parametros que é a query com a sintaxe sql e a nossa calback perceba que por ser um arequisição do tipo get onde basta retornar o svamores que ja temos basta informar dentro da calback e ao objeto response que está dentro da calbak esses dados.
 
 
 

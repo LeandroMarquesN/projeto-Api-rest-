@@ -55,8 +55,11 @@ router.post('/', (req, resp, next) => {
     mysql.getConnection((error, conn) => {
         if (error) { return resp.status(500).json({ error: error, response: null }); };
         conn.query(
+
             `insert into pedidos (id_produto,quantidade) values (?,?)`,
+
             [req.body.id_produto, req.body.quantidade],
+
             (error, results, fields) => {
                 conn.release();
                 if (error) { return resp.status(500).json({ error: error, response: null }); }
