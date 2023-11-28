@@ -74,13 +74,14 @@ router.post('/', upload.single('produto_imagem'), (req, resp, next) => {
     console.log(req.file)
     const produto = {
         nome: req.body.nome,
-        preco: req.body.preco
+        preco: req.body.preco,
+        produto_imagem: req.body.produto_imagem
     }
-    const query = `insert into produtos (nome,preco) values (?,?);`
+    const query = `insert into produtos (nome,preco,imagem_produto) values (?,?,?);`
     mysql.getConnection((error, conn) => {
         conn.query(
             query,
-            [produto.nome, req.body.preco],
+            [produto.nome, req.body.preco, req.file.path],
             (error, results, fields) => {
                 conn.release();
 
@@ -91,8 +92,9 @@ router.post('/', upload.single('produto_imagem'), (req, resp, next) => {
                         id_produto: results.idprodutos,
                         nome: req.body.nome,
                         preco: req.body.preco,
+                        imagem_produto: req.file.path,
                         request: {
-                            tipo: "POST",
+                            tipo: "GET",
                             descricao: "Insere um produto",
                             url: 'http://localhost:3002/produtos'
                         }

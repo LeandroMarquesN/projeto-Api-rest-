@@ -885,7 +885,8 @@ agora voltamos para o postma e vamos fazer o mesmo precesso do post pra inserir 
     
    
 
-
+url pra testar o diretorio para ver se está publico:
+http://localhost:3002/upload/2023-11-28T21:24:08.158Z%20%20%20amorETudo.webp
 
 
 
