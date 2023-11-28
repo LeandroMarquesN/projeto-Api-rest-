@@ -543,7 +543,10 @@ Aqui estamos implemntado o methodo patch então a query que estamos usando é es
             ------  METHODO DELETE -----
 ---------------------------------------------------------------------
 
-aAgora vamos para o methodo delete onde termeos esse codigo:
+Agora vamos para o methodo delete onde teremos esse codigo:
+
+
+//---- METODO DELETE DELETA UM  PRODUTO -----
 
 router.delete('/', (req, resp, next) => {
     const query = 'delete from produtos where idProdutos =?';
@@ -551,10 +554,22 @@ router.delete('/', (req, resp, next) => {
     mysql.getConnection((error, conn) => {
         conn.query(
             query,
-            [req.body.idProdutos],
+            [req.body.id_produto],
             (error, results, fields) => {
                 conn.release();
-
+                
+                const response = {
+                    menssagen: "Produlto removido com sucesso!!",
+                    request: {
+                        tipo: "POST",
+                        descricao: "INSERI UM PRODUTO ESEPECIFICO",
+                        url: 'http://localhost:3002/produtos/',
+                        body: {
+                            nome: "String",
+                            preco: "Number"
+                        }
+                    }
+                }
                 if (error) {
                     resp.status(500).json({
                         error: error,
@@ -563,7 +578,7 @@ router.delete('/', (req, resp, next) => {
                 } else {
                     resp.status(200).send({
                         error: null,
-                        menssagen: 'Produto removido com sucesso!!',
+                        Response: response
 
                     });
                 }
@@ -577,28 +592,109 @@ Aqui é a mesma coisa onde vamos usar a query sql :
     
     E perceba que estamos selecionando  o idProduto onde será a referencia para o elemento que queremos deletar em nosso banco de dados.
     
-    E o idProduto da nossa query sql vai se refereir ao elemento desse array   [req.body.idProdutos],
+    E o idProduto da nossa query sql vai se refereir ao elemento desse array 
+    
+    [req.body.id_produto],
     E então seguimos com a estrutura do codigo.
     
+    OUtro ponto importante dentro desse codigo e que dentro da "conn.query() temos 3 parametros importantes:
+    1ª query : que vai a sintaxe sql para fazermos a alterã]o o banco de dados.
+    2ª selecionamos  o elemento da requisição que queremos trabalhar que seria o req.body.id_produto.
+    3ª temos a nossa callback (error,resulsts,fields) =>{} e dentro do bloco da caback criamos um objeto chamado de "response" que vai conter informações relevantes para a decisãodo usario  que é:
+    
+         const response = {
+                    menssagen: "Produlto removido com sucesso!!",
+                    request: {
+                        tipo: "POST",
+                        descricao: "INSERI UM PRODUTO ESEPECIFICO",
+                        url: 'http://localhost:3002/produtos/',
+                        body: {
+                            nome: "String",
+                            preco: "Number"
+                        }
+                    }
     
 
------rascunho ------
- // -- CRIANDO UM OBJETO PARA RETORNAR MAIS INFORMAÇÕES --
-                // const response = {
-                //     menssagen: "Produto inserido com sucesso",
-                //     produtoCriado: {
-                //         id_produto: results.idprodutos,
-                //         nome: req.body.nome,
-                //         preco: req.body.preco,
-                //         request: {
-                //             tipo: "POST",
-                //             descricao: "Insere um produto",
-                //             url: 'http://localhost:3002/produtos'
-                //         }
-                //     }
-                // }
+---------------------- PARTINDO PARA O ARQUIVO PEDIDOS ---------------------------
 
+no arquivo pedidos vamos praticamente fazer a mesma coisa que fizemos no arquivo produto pois vamos trabalhar com as requisições e criar em conjunto a conexao com o banco de dados.
+
+
+perceba que o nosso arquivo pedidos começa com a importação dos modulos necessarios:
+
+const express = require('express');
+const router = express.Router();
+const mysql = require('../mysql').pool
+
+e ja começamos com a rota responsavel por retornar todos os pedidos, porem nessa rota alem de retornarmos  todos os pedidos vamos juntar a tabela pedidos com a tabela produtos do nosso banco de dados então iremos selecionar em nossa query os elementos da requisição que queremos que seja mostrado na tela:
+
+Essa será a nossa query:
+
+    const query = `select  pedidos.id_pedido,
+                           pedidos.quantidade,
+                           produtos.idprodutos,
+                           produtos.nome,
+                           produtos.preco
+                      from pedidos
+                INNER JOIN produtos
+                        on produtos.idprodutos = pedidos.id_produto;`
     
+Perceba que estamos usando o "INNER JOIN" para juntar com produtos onde a chave primaria da tabela produtos proddutos.idproduto e igual a chave estrangeira de pedidos que é a pedidos.id_produto.
+
+
+E a nossa rota "get" terá esse codigo:
+
+router.get('/', (req, resp, next) => {
+    const query = `select  pedidos.id_pedido,
+                           pedidos.quantidade,
+                           produtos.idprodutos,
+                           produtos.nome,
+                           produtos.preco
+                      from pedidos
+                INNER JOIN produtos
+                        on produtos.idprodutos = pedidos.id_produto;`
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            query,
+            (error, result, fields) => {
+                conn.release();
+                
+                const response = {
+
+                    pedidos: result.map(pedido => {
+                        return {
+                            id_pedido: pedido.id_pedido,
+                            quantidade: pedido.quantidade,
+                            produto: {
+                                id_produto: pedido.idprodutos,
+                                nome: pedido.nome,
+                                preco: pedido.preco
+                            },
+                            request: {
+                                tipo: "GET",
+                                descricao: "Retorna detalhes do pedido",
+                                url: 'http://localhost:3002/pedidos' + pedido.id_pedido
+                            }
+                        }
+                    })
+                }
+                if (error) {
+                    resp.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                } else {
+                    resp.status(202).send({
+                        erro: null,
+                        response: response
+                    })
+                }
+            });
+    });
+});
+
+
+Perceba que nosso objeto que estmos usando para retornar que é o response possui outras informções, isso por que essas informações vão variar de acordo com a necessidade e o tipo de requisição que estamos fazendo dentro da rota. aqui estmoa trabalahando com umareuqisição do tipo "GET" então precisamo retornar todas informações necessarias.
 
 
 
