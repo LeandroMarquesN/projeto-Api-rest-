@@ -34,7 +34,7 @@ const rotasPedidos = require('./Routes/pedidos')
 app.use(morgan('dev'));
 
 // DISPONIBILIZAR O DIRETORIO UPLOAD PUBLICAMENTE
-// Para isso foi criado a rota
+// Para isso foi criado a rota '/upload
 app.use('/upload', express.static('upload'));
 // ===  ROTAS DE PRODUTOS =======
 app.use('/produtos', rotasProdutos);

@@ -242,7 +242,7 @@ Se a configuração do CORS não estiver configurada corretamente, o console do 
 Agora vamos partir para o docker onde vamos incluir uma estancia do mysql do  docker
  estamos utilizando o dokcer para armazenar o nosso banco de dados em um container dokcer e fazer as interligação com NodeJs
  
- recomendo que veja na pasta que criei sobre dockercaso queira saber mais sobre o docker:
+ recomendo que veja na pasta que criei sobre docker caso queira saber mais sobre o docker:
  
  o comando que vamos utilizar no docker para gerar o container do mysql e executar será:
  
@@ -291,9 +291,9 @@ https://community.revelo.com.br/como-conectar-um-banco-de-dados-ao-javascript/
 == Agora seguimos para a continuaçãoda playlist : https://www.youtube.com/watch?v=642J5YzLXDk&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=8&ab_channel=Maransatto
 
 
-Agora que ja temso o nosso banco de dados  criado e a nossa api precisamos conectalos e para isso devemos baixar outra biblioteca. 
+Agora que ja temos o nosso banco de dados  criado e a nossa api precisamos conectalos e para isso devemos baixar outra biblioteca mysql2
 
-A biblioteca queprecisa ser baixada e a do mysql2 e vamos abaixar ela atraves do npm.
+A biblioteca que precisa ser baixada e a do mysql2 e vamos abaixar ela atraves do npm.
 
     comando que deve ser rodado:
     
@@ -888,6 +888,103 @@ agora voltamos para o postma e vamos fazer o mesmo precesso do post pra inserir 
 url pra testar o diretorio para ver se está publico:
 http://localhost:3002/upload/2023-11-28T21:24:08.158Z%20%20%20amorETudo.webp
 
+
+-------------------------------------------------------------------------------
+RETOMAMOS OS ESTUDOS APARTIR DE AGORA:
+
+importante saber e repetir que sepre que deligar mos a nossa marquina ou ate mesmo reiniciar a maquina ou pararmos o container do mysql devemos ter em mente que precisamos reinicia o nosso container do mysql co o comando :
+
+    sudo docker run --rm -p 3306:3306 --name mysql_projeto_full -e MYSQL_ROOT_PASSWORD=root -d mysql 
+    
+    
+Esse comando vai criar o nosso container mysql e configurar a senha eas portas 
+E note que neste comando não estamos trabalahando com volumes nomeados entãose deligo a maquina ou parou o container vai perder todos os dados das tabelas.
+
+E por masi que tenahmos iniciado o container e estabelicido a conexao vamos perder a nossa estrutura do banco de dados sendo obrigado a ir no arquivo BancoDeDados.mysql e iniciar todos os comandos.
+
+
+----------------- solucionando o problema dos volumes nomeados --------------------
+------Para quando a maquina for desligada nos não perdermos os dados do banco -----
+
+E para resolver este problema precisamos usar o o conceito de volumes nomeados para sarvar os dados em um volume criado no container.
+
+e refazendo o nosso codigo ele vai ficar assim:
+    
+    sudo docker run --rm -p 3306:3306 --name mysql_projeto_full  -v "vol_mysql_projeto_full:/var/lib/mysql" -e MYSQL_ROOT_PASSWORD=root -d mysql
+
+Agora estamos usando uma nova flag a (-v) onde foi criado anteriormente um volume nomeado chamado "vol_mysql_projeto_full" que estaremos usando para guardar os dados no container
+
+
+E nessa aula vamos trabalhar com volumes nomeados
+
+nos fizemos um mapeamento de pasta porem agora vamos salvar o nosso banco de dados para que eles não se perca.
+
+usando os volumes nomeados o docker vai gerenciar para nos .
+o mysql por padrao grava todas as nossa estruturas de banco de dados em uma pasta;
+ pasta e ==> /var/lib/mysql
+
+ temos um comando chamado:
+ 
+ comando ==> docker volume
+===================================================================================onde será apresentado esta lista de comandos que podemos usar:
+ 
+ Usage:  docker volume COMMAND
+
+Manage volumes
+
+Commands:
+  create      Create a volume
+  inspect     Display detailed information on one or more volumes
+  ls          List volumes
+  prune       Remove all unused local volumes
+  rm          Remove one or more volumes
+
+Run 'docker volume COMMAND --help' for more information on a command.
+
+
+E para salvar o nosso banco de dados usando o conceito de volumes nomeados temos que 
+rodar o comando :
+
+    sudo docker volume create vol_mysql_projeto_full
+    
+pronto acabamos de criar um volume chamado ==> vol_mysql_projeto_full
+
+podemos listar os volumes criados com  o comando => docker volume ls
+
+agora vamos inspecionar o nosso volume com o comando : inspect
+
+
+
+    comando  ==> sudo docker volume inspect vol_mysql_projeto_full
+    
+vamos ter essas informações:
+
+[
+    {
+        "CreatedAt": "2023-11-29T21:10:47-03:00",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/snap/docker/common/var-lib-docker/volumes/vol_mysql_projeto_full/_data",
+        "Name": "vol_mysql_projeto_full",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+Pronto agora solucionamos o nosso problemade perder os dados. pois agora eles vao estar todos slvos dentro do container mesmo que a maquina desligue.
+
+
+nunaca se esqueca de dar um :
+    sudo docker volume ls
+    
+para ver os nome dos volumes.
+
+pra acessar o mysql via terminal use o camando:
+
+    docker exec -it mysql_projeto_full bash
+    
+     depois que abrir o bash damos o comando:
+        
+        mysql -uroot -proot
 
 
 

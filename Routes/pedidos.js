@@ -7,7 +7,8 @@ router.get('/', (req, resp, next) => {
                            pedidos.quantidade,
                            produtos.idprodutos,
                            produtos.nome,
-                           produtos.preco
+                           produtos.preco,
+                           produtos.imagem_produto
                       from pedidos
                 INNER JOIN produtos
                         on produtos.idprodutos = pedidos.id_produto;`
@@ -15,6 +16,7 @@ router.get('/', (req, resp, next) => {
         conn.query(
             query,
             (error, result, fields) => {
+                console.log(result)
                 conn.release();
                 const response = {
 
@@ -22,15 +24,17 @@ router.get('/', (req, resp, next) => {
                         return {
                             id_pedido: pedido.id_pedido,
                             quantidade: pedido.quantidade,
+
                             produto: {
                                 id_produto: pedido.idprodutos,
                                 nome: pedido.nome,
-                                preco: pedido.preco
+                                preco: pedido.preco,
+                                imagem_produto: pedido.imagem_produto
                             },
                             request: {
                                 tipo: "GET",
                                 descricao: "Retorna detalhes do pedido",
-                                url: 'http://localhost:3002/pedidos' + pedido.id_pedido
+                                url: 'http://localhost:3002/pedidos/' + pedido.id_pedido
                             }
                         }
                     })
@@ -54,6 +58,7 @@ router.post('/', (req, resp, next) => {
 
     mysql.getConnection((error, conn) => {
         if (error) { return resp.status(500).json({ error: error, response: null }); };
+
         conn.query(
 
             `insert into pedidos (id_produto,quantidade) values (?,?)`,
@@ -74,7 +79,7 @@ router.post('/', (req, resp, next) => {
                 const response = {
                     menssagen: "Pedido inserido com sucesso",
                     pedidoCriado: {
-                        id_pedido: results.idpedido,
+                        id_pedido: results.id_pedido,
                         id_produto: req.body.id_produto,
                         quantidade: req.body.quantidade,
                         request: {
@@ -97,6 +102,7 @@ router.get('/:id_pedido', (req, resp, next) => {
         conn.query(
             query,
             (error, results, fields) => {
+                console.log(results[0], fields)
                 conn.release();
 
                 if (results.length == 0) {
@@ -113,9 +119,10 @@ router.get('/:id_pedido', (req, resp, next) => {
                         id_pedido: results[0].id_pedido,
                         Id_produto: results[0].id_produto,
                         quantidade: results[0].quantidade,
+
                         request: {
                             tipo: "GET",
-                            descricao: "Retorna os detalhes de um pedido especifico",
+                            descricao: "Retorna todos os pedidos",
                             url: 'http://localhost:3002/pedidos'
                         }
                     }

@@ -76,7 +76,7 @@ router.post('/', upload.single('produto_imagem'), (req, resp, next) => {
     const produto = {
         nome: req.body.nome,
         preco: req.body.preco,
-        produto_imagem: req.body.produto_imagem
+        produto_imagem: req.file.path
     }
     const query = `insert into produtos (nome,preco,imagem_produto) values (?,?,?);`
     mysql.getConnection((error, conn) => {
@@ -96,7 +96,7 @@ router.post('/', upload.single('produto_imagem'), (req, resp, next) => {
                         imagem_produto: req.file.path,
                         request: {
                             tipo: "GET",
-                            descricao: "Insere um produto",
+                            descricao: "seleciona todos os produtos",
                             url: 'http://localhost:3002/produtos'
                         }
                     }
@@ -115,7 +115,7 @@ router.post('/', upload.single('produto_imagem'), (req, resp, next) => {
 
                     });
                 }
-                // stado 201 siguinifica um alateração no banco
+                // stado 201 siguinifica uma alteração no banco
 
             });
     });
@@ -129,9 +129,11 @@ router.get('/:id_produto', (req, resp, next) => {
     const query = `select * from produtos where idprodutos =${req.params.id_produto};`
 
     mysql.getConnection((error, conn) => {
+
         conn.query(
             query,
             (error, results, fields) => {
+                console.log(results[0], fields)
                 conn.release();
 
                 if (results.length == 0) {
@@ -148,12 +150,14 @@ router.get('/:id_produto', (req, resp, next) => {
                         id_produto: results[0].idprodutos,
                         nome: results[0].nome,
                         preco: results[0].preco,
+                        imagem_produto: results[0].imagem_produto,
                         request: {
                             tipo: "GET",
                             descricao: "Retorna os detalhes de um produto especifico",
                             url: 'http://localhost:3002/produtos'
                         }
                     }
+
                 }
 
                 if (error) {
