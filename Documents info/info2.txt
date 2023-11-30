@@ -973,18 +973,414 @@ vamos ter essas informações:
 Pronto agora solucionamos o nosso problemade perder os dados. pois agora eles vao estar todos slvos dentro do container mesmo que a maquina desligue.
 
 
-nunaca se esqueca de dar um :
+nunca se esqueca de dar um :
     sudo docker volume ls
     
 para ver os nome dos volumes.
 
 pra acessar o mysql via terminal use o camando:
 
-    docker exec -it mysql_projeto_full bash
+    sudo docker exec -it mysql_projeto_full bash
     
      depois que abrir o bash damos o comando:
         
         mysql -uroot -proot
+
+-----------------------------------------------------------------------------
+Agora que temos o nosso volume nomeado criado para conferir pbasta dar o comando:
+    sudo docker volume ls
+para confirmar que nossos dados estarão dentro do volume 
+
+Agora por mais que nosso container desapareça, os nossos dados estarão guardados basta darmos o comando para inicilaizar o container configurando o volume:
+
+    sudo docker run --rm -p 3306:3306 --name mysql_projeto_full  -v "vol_mysql_projeto_full:/var/lib/mysql" -e MYSQL_ROOT_PASSWORD=root -d mysql
+
+
+    
+    Esse comando que é responsavel por gerenciar os dados no volume nomeado:
+    
+         -v "vol_mysql_projeto_full:/var/lib/mysql"
+         
+         
+E caso vc queira ver no terminal mysql:
+
+
+pra acessar o mysql via terminal use o camando:
+
+    sudo docker exec -it mysql_projeto_full bash
+    
+     depois que abrir o bash damos o comando:
+        
+        mysql -uroot -proot
+        
+---------------------------------------------------------------------------------
+
+                        CRIANDO CADASTRO DE USUSARIO 
+
+                        ----------------------------
+REF:https://www.youtube.com/watch?v=aVAl8GzS0d0&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=13&ab_channel=Maransatto
+
+passo 11º da play list.
+
+Como funciona a autenctificação na API:
+de um lado temos o cliente  eo outro o servidor o cliente em uma aplicação web vai enviar os dados para o servidor então o servidor vai verificar se a senha e o login estão corretos e vai dar um a resposta par o cliente web e esse retorno seria uma sessão do usuario logado, so que a API rest não guarda sessão.
+
+então na pratica é retornavle um tolken 
+e o tolken e armazenado no cliente , e toda vez que o cliente precisa se comunicar com o servidor novamente ele envia esse tolken para autorizar as requisições.
+
+O tolken e uma chave que autoriza tanto do lado do cliente quanto do servidor 
+
+O que é fazer um token?
+
+Como Criar Um Token Do Zero? 3 Fatores Principais
+O token é um ativo digital de valor que opera utilizando uma blockchain já existente e fornece aos detentores o meio para fazer parte ou interagir em um sistema. Os principais tipos de projetos que usam token são os DeFi (finanças descentralizadas) e jogos com a dinâmica de pay-to-earn, ou seja, jogue para ganhar.
+
+
+O que é um token de acesso?
+
+Para autenticação e autorização, um token é um objeto digital que contém informações sobre a identidade do principal que faz a solicitação e para que tipo de acesso ele está autorizado.
+Onde normalmente é composto por um json e nesse json incluimos algumas informções como e-mail e senha e id do usuario.
+
+E alem das informções do usario ele é composto pouma assinatura onde junto forman o jason web tolken = JWT onde lea pode ser validada ou seja essa ajason web tolken pode ter um prazo de validade isso acontece para evitar fraudes.
+E ele normalmente não é criptografado.
+
+Para masi acesse a biblioteca; https://jwt.io/introduction
+
+--------------------- COMEÇANDO OS TRABALHOS COM JWT --------------------------
+
+PRIMEIRO PRECISAMOS CRIAR UMA ESTRURA EM NOSSO BANCO DE DADOS  
+
+OU SEJA MAIS UMATABELA CHAMADA USUARIOS
+
+primeiro vemos o nosso banco de dados:
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| Ecomerce           |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+Agora vamos usar o Ecomerce:
+mysql> use Ecomerce;
+Database changed
+mysql> 
+
+AGORA VAMOS CRIAR UMA TABELA NOVA:
+
+-- -------comando para criar uma nova tabela ------------
+
+create table usuarios (
+    id_usuario integer not null PRIMARY key AUTO_INCREMENT,
+    email varchar(100),
+    senha varchar(100)
+);
+
+visualizando a tablea criada direto no terminal:
+
+mysql> show tables;
++--------------------+
+| Tables_in_Ecomerce |
++--------------------+
+| pedidos            |
+| produtos           |
+| usuarios           |
++--------------------+
+3 rows in set (0.00 sec)
+
+Agora vamos criar a nossa rota para usarios;
+
+
+vamos criar um arquivo chamado usuarios.js
+
+e nesse arquivo vamos pegar o simports de modulos:
+
+const express = require('express');
+const router = express.Router();
+const mysql = require('../mysql').pool;
+
+e tambem precisamos exportar o router neste arquivo:
+
+module.exports = router;
+
+Então precisarremos crira 2 rotas aqui neste arquivo
+
+A rota de sigIn  e Sigout
+
+
+-------- NOSSO ARQUIVO USARIOS PRECIA ESTAR ASSIM -------------
+
+const express = require('express');
+const router = express.Router();
+const mysql = require('../mysql').pool;
+
+
+// ------- CRIANDO A ROTA DE CADASTRO USANDO O POST -----------
+
+router.post('/cadastro', (req, resp , next) => {
+    mysql.getConnection((err, conn)=> {
+        if (error) { return resp.status(500).send({ error: error }) }
+    }) 
+});
+
+
+
+
+module.exports = router;
+
+----- AGORA PRECISAMOS INSTALAR UMA BILBIOTECA CHAMADA BCRIPT --- 
+
+vamos rodar o comando :
+
+    npm intall --save bcrypt
+    
+Estou tentando instalar essa biblioteca mas estou tentdo problemas estou atualizando o meu node par versoa stavel.
+
+
+
+-----  PARA ATUALIZAR O NODE ------
+
+1. Abra o Terminal no Ubuntu
+
+Antes de qualquer coisa precisaremos do terminal, então nossa primeira missão é abri-lo.
+
+2. Limpar o cache
+
+Para limpar o cache no npm, precisamos executar o comando abaixo em nosso terminal.
+
+sudo npm cache clean -f
+
+Vai solicitar a senha, e então é só colocar e prosseguir.
+
+3. Instalar globalmente o modulo n
+
+o modulo n vai ajudar a facilitar a atualização do node.
+
+sudo npm install -g n
+
+4. Escolha versão do node
+
+Para instalar a última versão lançada do node basta usar o comando abaixa:
+
+sudo n latest
+
+Porém, a última versão nunca é a recomendada, então a melhor escolha seria a versão mais recente que está estável, para isso é bem simples basta usar o comando abaixo:
+
+sudo n stable
+
+Ótimo, agora está perfeito... e se ao invés de querer a última versão lançada ou versão recente estável eu quisesse a uma versão específica? Também é muito simples... suponhamos que queremos a versão 8.2.6. Para isso usaremos o comando:
+
+sudo n 8.2.6
+
+5. Verificar a versão do Node
+
+Pronto, seu node está atualizado. Agora verifique a versão do node com o comando:
+
+node --version
+
+Calma, sei que retornou a versão antiga do node. Não há nada de errado, reinicie o terminal e digite o comando de verificar a versão novamente que dessa vez será apresentado versão atualizada.
+
+---------------------------------------------------------------------------------
+
+usei tambem essse comando apara atualizar o npm :
+referncia:
+https://acervolima.com/como-atualizar-o-npm/
+
+Método 4: Usando limpeza de cache e instalação estável (somente para Linux).
+
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+
+Método 1: Usando o npm updatecomando para atualizar o gerenciador de pacotes do nó.
+npm update -g
+
+----------- AGORA QUE ATUALIZEI O NODE  CONSEGUIMOS INSTALR A BIBLIOTECA --------
+
+usuario@usuario-desktop:~/Projeto Rest Api node docker mysql$ npm install --save bcrypt
+
+added 49 packages, and audited 182 packages in 6s
+
+18 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+----------------------------------------------------------------------------------
+AGORA AS NOSSAS DEPENDECIAS DO PACKAGE.JSON ESTÃO ASSSIM:
+
+{
+  "name": "projeto-rest-api-node-docker-mysql",
+  "version": "1.0.0",
+  "description": "Teste de Rest Api",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "REST",
+    "API"
+  ],
+  "author": "Leandro Marques",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+
+---------------------------------------------------------------------------------
+A biblioteca bcrypt e uma biblioteca usada para criptografar as nossas senhas.
+
+
+nosso arquivo usuarios.js está assim:
+
+const express = require('express');
+const router = express.Router();
+const mysql = require('../mysql').pool;
+const bcrypt = require('bcrypt');
+
+// ------- CRIANDO A ROTA DE CADASTRO USANDO O POST -----
+
+const express = require('express');
+const router = express.Router();
+const mysql = require('../mysql').pool;
+const bcrypt = require('bcrypt');
+
+// ------- CRIANDO A ROTA DE CADASTRO USANDO O POST -----
+router.post('/cadastro', (req, resp, next) => {
+    mysql.getConnection((err, conn) => {
+        if (error) { return resp.status(500).send({ error: error }) }
+        bcrypt.hash(req.body.senha, 10, (errorBcrypt, hash) => {
+        
+            if (errorBcrypt) {
+                return resp.status(500).send({
+                    error: errorBcrypt
+                })
+            };
+
+
+        });
+    });
+});
+
+
+
+
+
+module.exports = router;
+-----------------------------------------------------------------------------
+
+    bcrypt.hash(req.body.senha, 10)
+    
+nesse trecho de codigo estamos chamando o bcrypt. e tambem o hash onde esse has vai se encarregar de criar  um astring hash para o nossa senha depois pegamos no corpo da requisição o req.body.senha e logo em sseguida vem o:
+
+    salt:  que é basicamente a quantidade de numeros , letras e caracteres aleatorios onde serão colocados entre as letras da nossa senha fazendo com que nossa senha fique criptografada e mais dificil  de ser descoberta.
+    
+    lembrando que essa senha criptografada ela é irreverssivel.nao e possivel transforma de volta na string da minha senha.
+
+Estmos fazendo isso porque hoje existem bibliotecas para descobrir a senha geradas por esses hash e caso a senha seja fraca é bem possivel que uma dessas bibliotecas descubra a senha gerada pelo hash.
+
+    E depois do 2ªparametro que é o salt temos a nossa função de callbasck onde dentro dela vamos tratar os erros e pegar a nossa conexao com o banco de dados para iserirmos o usario na nossa table usuario
+
+------------------------------------------------------------------------------
+
+Em nosso arquivo app.js temos incluir a rotas de usuarios da mesma forma que fizemos com produtos e pedidos.
+
+const rotasProdutos = require('./Routes/produtos')
+const rotasPedidos = require('./Routes/pedidos')
+const rotasUsusarios = require('./Routes/usuarios')
+
+app.use(morgan('dev'));
+
+// DISPONIBILIZAR O DIRETORIO UPLOAD PUBLICAMENTE
+
+// Para isso foi criado a rota '/upload
+app.use('/upload', express.static('upload'));
+// ===  ROTAS DE PRODUTOS =======
+app.use('/produtos', rotasProdutos);
+// === ROTAS DE PEDIDOS ======
+app.use('/pedidos', rotasPedidos);
+// ----- ROTAS USUARIOS ------
+app.use('/usuarios', rotasUsusarios);
+
+---------------------------------------------------------------------------------
+                ------CODIGO DO METHODO POST DE USARIOS -------
+                
+const express = require('express');
+const router = express.Router();
+const mysql = require('../mysql').pool;
+const bcrypt = require('bcrypt');
+const { response } = require('../app');
+
+// ------- CRIANDO A ROTA DE CADASTRO USANDO O POST -----
+router.post('/cadastro', (req, resp, next) => {
+    mysql.getConnection((err, conn) => {
+        if (error) { return resp.status(500).send({ error: error }) };
+        bcrypt.hash(req.body.senha, 10, (errorBcrypt, hash) => {
+            if (errorBcrypt) {
+                return resp.status(500).send({
+                    error: errorBcrypt
+                })
+            };
+            conn.query(
+                `insert into usuarios (email,senha) values(?,?)`,
+                [req.body.email, hash],
+                (error, results) => {
+                    conn.release();
+                    if (error) { return resp.status(500).send({ error: error }) };
+
+                    response = {
+                        menssagem: "usuario Criado com sucesso!",
+                        usuarioCriado: {
+                            id_ususario: results.insertId,
+                            email: req.body.email
+                        }
+                    }
+                    return res.status(201).send(response);
+                }
+            )
+
+        });
+    });
+});
+
+module.exports = router;
+
+--------------------------------------------------------------------------------
+
+agora vamos para o postman e vamos terstar  a rota qu ecorresponde a url:
+
+http://localhost:3002/usuarios/cadastro
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

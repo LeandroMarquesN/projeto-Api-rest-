@@ -29,7 +29,7 @@ app.use((req, resp, next) => {
 // ========= ROTAS =============
 const rotasProdutos = require('./Routes/produtos')
 const rotasPedidos = require('./Routes/pedidos')
-
+const rotasUsusarios = require('./Routes/usuarios')
 
 app.use(morgan('dev'));
 
@@ -39,7 +39,9 @@ app.use('/upload', express.static('upload'));
 // ===  ROTAS DE PRODUTOS =======
 app.use('/produtos', rotasProdutos);
 // === ROTAS DE PEDIDOS ======
-app.use('/pedidos', rotasPedidos)
+app.use('/pedidos', rotasPedidos);
+// ----- ROTAS USUARIOS ------
+app.use('/usuarios', rotasUsusarios);
 
 
 // ===== QUANDO A ROTA NÃO É ENCONTRADA CAI AQUI!!=====
