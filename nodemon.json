@@ -5,7 +5,9 @@
         "MYSQL_DATABASE":"Ecomerce",
         "MYSQL_HOST":"localhost",
         "MYSQL_PORT":3306,
-        "PORT":3002
+        "PORT":3002,
+
+        "JWT_KEY":"segredo"
        
     }
 }

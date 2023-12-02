@@ -1361,9 +1361,123 @@ module.exports = router;
 
 --------------------------------------------------------------------------------
 
-agora vamos para o postman e vamos terstar  a rota qu ecorresponde a url:
+agora vamos para o postman e vamos terstar  a rota que corresponde a url:
 
 http://localhost:3002/usuarios/cadastro
+---------------------------------------------------------------------------------
+vide referencia :
+
+https://www.youtube.com/watch?v=A-c643zCW7E&list=PLWgD0gfm500EMEDPyb3Orb28i7HK5_DkR&index=14&ab_channel=Maransatto
+
+
+Passo 12 Login + JWT toclken
+
+Aqui vamos aprender a fazer o login do usuario e retornar o tolken para o usuario.
+
+No arquivo usuarios.js ja tinhamos feito um methodo de cadastro onde criamos a rota para o cadastro ONDE O USARIO ACESSANDO ESSA URL:
+
+URL: http://localhost:3002/usuarios/cadastro
+
+Ele conseguira enviar os seus dados como e-mail e senha para se cadastrar.
+
+Agora vamos criar o methodo para esse usario se logar.
+e para isso vamos também utilizar o methodo post porem precisamos criar uma rota para o sitema de login também.
+
+
+Então no arquivo de uusarios.js vamos criar mais um methodo para login utilizando o post.
+
+
+E esse será o nosso resultado do codigo referente ao login.
+onde acessand atraves do postman a url: http://localhost:3002/usuarios/login
+e colocando o s dados no body x-www-form-urlencoded e enviar passando o email e senha.
+
+/ ----------- METHODO LOGIN USANDO O POST --------------------------
+
+router.post('/login', (req, res, next) => {
+    mysql.getConnection((error1, conn) => {
+    
+        if (error1) { return res.status(500).send({ error: error1,menss:"erro1" }) };
+        
+        const query = 'select * from usuarios where email =?';
+        
+        conn.query(query, [req.body.email], (error2, results, fields) => {
+            conn.release();
+            if (error2) { return res.status(500).send({ error: error2, menss:"erro2" }) };
+            
+            if (results.length < 1) {
+                return res.status(401).send({ menssagem: "Falha na autenticação!" });
+            }
+            
+            // validando senhas string com a senha hash que é criptografada
+            bcrypt.compare(req.body.senha, results[0].senha, (error3, results) => {
+                if (error3) {
+                    return res.status(401).send({ menss: 'falha na autenticação!',menss:"erro 4" });
+                }
+                if (results) {
+                    return res.status(200).send({ menss: 'Autenticado com Sucesso!!', request: { email: req.body.email } });
+                }
+                return res.status(401).send({ menss: 'Falaha na autenticação' });
+            });
+        });
+    });
+})
+
+
+----------  VALIDAÇÃO JA ESTÁ PRONTA AGORA PRECISAMOS RETORNAR O TOKEN -------
+
+AGORA VAMOS PRECISAR RETORNAR O TOLKEM PARA O USARIO E PARA ISSO VAMOS TER QUE INSTALAR MAIS UMA BIBLIOTECA.
+
+    biblioteca; jsonwebtoken 
+    comando para instalar : npm install --save jsonwebtoken
+    
+usuario@usuario-desktop:~/Projeto Rest Api node docker mysql$ npm install --save jsonwebtoken
+
+added 13 packages, and audited 195 packages in 7s
+
+18 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+usuario@usuario-desktop:~/Projeto Rest Api node docker mysql$ 
+
+---------------- E O QUE ESSA BIBLIOTECA FAZ ? -------------------------------
+time video: 8:19 explicação do jwt
+
+CASO VC QUEIRA VER A DOCUMENTAÇÃO E AMIS DETALHES SOBRE ESSA BIBLIOTECA ACESSE:
+
+https://github.com/auth0/node-jsonwebtoken
+
+vamos usar o methodo jwt.sign(payload, secretOrPrivateKey, [options, callback])
+
+
+Antes de tudo precisamos importa jsonwebtoken
+
+Agora que fizemos o require('jsonwebtoken')  eatribuimos na constant jwt.
+
+vamos no blocko onde é informado que o usuario foi logado com sucesso.
+
+esse:
+
+ if (results) {
+                    return res.status(200).send({ menss: 'Autenticado com Sucesso!!', request: { email: req.body.email } });
+
+
+
+                }
+                
+esse bloco está dentro do methodo que acamos de criar para o usuario fazer login
+
+E vamos usar o methodo sign dentro desse bloco.
+
+explicação para o expiresIn: expiresIn: expresso em segundos ou uma string descrevendo um intervalo de tempo vercel/ms .
+Por exemplo: 60, "2 days", "10h", "7d". Um valor numérico é interpretado como uma contagem de segundos. Se você usar uma string, certifique-se de fornecer as unidades de tempo (dias, horas, etc.), caso contrário, a unidade de milissegundos será usada por padrão ( "120"é igual a "120ms").
+
+
+
+
+
+
+
 
 
 
